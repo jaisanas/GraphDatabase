@@ -68,6 +68,7 @@ public class ListAllDB extends JPanel {
     frame.setContentPane(new ListAllDB());
     frame.pack();
     frame.setVisible(true);
+    
   }
   
   
@@ -94,8 +95,18 @@ public class ListAllDB extends JPanel {
 		String dirPathIndex = StartPage.path.replace("\\","\\\\");
 		String dbPathIndex = dirPathIndex+"\\"+element;
 		String filePathIndex = dbPath+"\\"+"jaisGraphIndex.text";
+		String filePathIndex2 = dbPath+"\\"+"jaisGraphIndexList.text";
 		System.out.println(filePathIndex);
 		File file1 = new File(filePathIndex);
+		File file1List = new File(filePathIndex2);
+		
+		String dirTreeIndex = StartPage.path.replace("\\","\\\\");
+		String dbTreeIndex = dirPathIndex+"\\"+element;
+		String fileTreeIndex = dbPath+"\\"+"jaisGraphTreeIndex.text";
+		String fileTreeListIndex = dbPath+"\\"+"jaisGraphTreeListIndex.text";
+		System.out.println(fileTreeIndex);
+		File fileTree = new File(fileTreeIndex);
+		File fileTreeList = new File(fileTreeListIndex);
 		
 		//create file for indexing path 
 		String dirPathIndexPath = StartPage.path.replace("\\","\\\\");
@@ -107,10 +118,12 @@ public class ListAllDB extends JPanel {
 		String fileMetaDataPath = dbPathIndexPath+"\\"+"jaisGraphMetadataPathIndex.text";
 		File file3 = new File(fileMetaDataPath);
 		
-		if (!file.exists() && !file1.exists()) {
+		if (!file.exists() && !file1.exists() && !file1List.exists() && !fileTree.exists() && !fileTreeList.exists()) {
 			System.out.println("capek");
 			file.createNewFile();
 			file1.createNewFile();
+			fileTree.createNewFile();
+			fileTreeList.createNewFile();
 		}else {
 			StartPage.graphList = new ArrayList();
 			br = new BufferedReader(new FileReader(filePath));
