@@ -25,9 +25,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.swing.JList;
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 
@@ -43,6 +47,10 @@ public class StartPage extends JFrame {
 	public static ArrayList<String> graphList;
 	public static GraphIndex gpi;
 	public static String dbPath;
+	public static GraphTreeIndex graphTreeIndex;
+	public static GraphTreeListIndex  graphTreeListIndex;
+	public static GraphIndexDesc gIndexDesc;
+	public static NVertexEachGraph nVertex;
 	/**
 	 * Launch the application.
 	 */

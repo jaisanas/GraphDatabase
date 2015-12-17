@@ -149,6 +149,7 @@ public class ModifyDB extends JDialog {
 									bw.newLine();
 								}
 								bw.close();
+								ListAllDB.initIndex();
 								FileWriter fw1 = new FileWriter(file1.getAbsoluteFile());
 								BufferedWriter bw1 = new BufferedWriter(fw1);
 								bw1.write("<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/></root></mxGraphModel>");
@@ -185,6 +186,7 @@ public class ModifyDB extends JDialog {
 										bw.newLine();
 									}
 									bw.close();
+									ListAllDB.initIndex();
 									FileWriter fw1 = new FileWriter(file1.getAbsoluteFile());
 									BufferedWriter bw1 = new BufferedWriter(fw1);
 									bw1.write("<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/></root></mxGraphModel>");
@@ -260,9 +262,15 @@ public class ModifyDB extends JDialog {
 						 }
 					 }
 				 }
+			 }else if(partCommands.length == 8) {
+				 ListAllDB.initIndex();
+				 System.out.println(" select query ");
+				 GraphIndex.selectGraph(partCommands[4], partCommands[6]);
+				 
 			 }
 			}
 		});
+		
 		
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			
@@ -293,6 +301,7 @@ public class ModifyDB extends JDialog {
 									bw.newLine();
 								}
 								bw.close();
+								ListAllDB.initIndex();
 								FileWriter fw1 = new FileWriter(file1.getAbsoluteFile());
 								BufferedWriter bw1 = new BufferedWriter(fw1);
 								bw1.write("<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/></root></mxGraphModel>");
@@ -328,6 +337,7 @@ public class ModifyDB extends JDialog {
 										bw.newLine();
 									}
 									bw.close();
+									ListAllDB.initIndex();
 									FileWriter fw1 = new FileWriter(file1.getAbsoluteFile());
 									BufferedWriter bw1 = new BufferedWriter(fw1);
 									bw1.write("<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/></root></mxGraphModel>");

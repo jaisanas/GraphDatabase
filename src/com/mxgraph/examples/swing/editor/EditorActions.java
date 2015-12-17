@@ -52,7 +52,10 @@ import javax.swing.text.html.HTMLEditorKit;
 import org.w3c.dom.Document;
 
 import ListAllDB.BiMap;
+import ListAllDB.GraphData;
 import ListAllDB.GraphIndex;
+import ListAllDB.GraphTreeIndex;
+import ListAllDB.GraphTreeListIndex;
 import ListAllDB.GraphIndex.ValueGraphIndex;
 import ListAllDB.StartPage;
 import ListAllDB.GraphIndex.KeyGraphIndex;
@@ -618,6 +621,7 @@ public class EditorActions
 						System.out.println(sisis.length);
 						ArrayList<String> edgeReminder = new ArrayList();
 						HashMap<String, ArrayList<BiMap>> hm = new HashMap<String, ArrayList<BiMap>>();
+						HashMap<String,ArrayList<String>> gDt = new HashMap<>();
 						if(sisis.length > 0) {
 							mxCell sisi = (mxCell) sisis[0];
 							String idEdge = sisi.getId();
@@ -641,6 +645,13 @@ public class EditorActions
 								hm.get(bm.getSourceLabel()).add(bm);
 							}else {
 								hm.get(bm.getSourceLabel()).add(bm);
+							}
+							
+							if(gDt.get(bm.getSourceLabel()) == null) {
+								gDt.put(bm.getSourceLabel(), new ArrayList<String>());
+								gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+							} else {
+								gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
 							}
 						  for(int i = 1; i < sisis.length; i++) {
 							//if(!edgeReminder.contains(idEdge)) {
@@ -670,6 +681,13 @@ public class EditorActions
 									}else {
 										hm.get(bm.getSourceLabel()).add(bm);
 									}
+									
+									if(gDt.get(bm.getSourceLabel()) == null) {
+										gDt.put(bm.getSourceLabel(), new ArrayList<String>());
+										gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+									} else {
+										gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+									}
 								}
 							//}
 							//System.out.println("id sisi : "+y+" label sisi "+x+" id simpul awal : "+sisi.getSource().getId()+" simpul asal : "+sisi.getSource().getValue()+", id simpul target "+ sisi.getTarget().getId()+" simpul target "+sisi.getSource().getValue() );
@@ -691,6 +709,27 @@ public class EditorActions
 						StartPage.gpi.print();
 						String fileIndex = StartPage.dbPath+"\\"+"jaisGraphIndex.text";
 						StartPage.gpi.writeToFile(fileIndex);
+						
+						
+						//migrate data
+						HashMap<String,ArrayList<ArrayList<String>>> dt = new HashMap<>();
+						for (Entry<String, ArrayList<String>> ee : gDt.entrySet()) {
+							ArrayList<String> a = new ArrayList<>();
+							a = ee.getValue();
+							String key = ee.getKey();
+							ArrayList<ArrayList<String>> temp = new ArrayList<>();
+							temp.add(a);
+							dt.put(key, temp);
+							temp = null;
+						}
+						
+						GraphData dtX = new GraphData(dt, file);
+						//StartPage.graphTreeIndex = StartPage.graphTreeListIndex.union(file, dtX, StartPage.graphTreeIndex);
+						StartPage.graphTreeListIndex.union(file, dtX);
+						StartPage.graphTreeListIndex.Print();
+						String filePathTree = StartPage.dbPath+"\\"+"jaisGraphTreeIndex.text";
+						String filePathTreeList = StartPage.dbPath+"\\"+"jaisGraphTreeListIndex.text";
+						StartPage.graphTreeListIndex.writeToFile(filePathTree, filePathTreeList);
 						System.out.println("save as mxe");
 						mxCodec codec = new mxCodec();
 						String xml = mxXmlUtils.getXml(codec.encode(graph

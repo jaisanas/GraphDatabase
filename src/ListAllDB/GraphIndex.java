@@ -3,6 +3,7 @@ package ListAllDB;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -45,6 +46,32 @@ public class GraphIndex {
 		
 	}
 	
+	public boolean contains(ArrayList<BiMap> lbm, BiMap bm) {
+		int index = -9;
+		for(int i = 0; i < lbm.size(); i++) {
+			if(lbm.get(i).equalsBM(bm)) index = i;
+		}
+		
+		if(index >= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isEqualsListBM(ArrayList<BiMap> b1, ArrayList<BiMap> b2) {
+		boolean flag = true;
+		if(b1.size() != b2.size()) {
+			flag = false;
+		} else {
+			for(int i = 0; i < b1.size(); i++) {
+				if(!contains(b1,b2.get(i))) flag = false;
+			}
+		}
+		
+		return flag;
+	}
+	
 	public void setNewValue(HashMap<String,ArrayList<BiMap>> hm,String namaGraph) {
 		System.out.println("set new value");
 		System.out.println("ukuran key index"+this.keyIndex.size());
@@ -52,17 +79,24 @@ public class GraphIndex {
 			System.out.println("test coba");
 			initValue(hm,namaGraph);
 		}else {
+			ArrayList<Integer> arrInteger = new ArrayList<>();
+			
 			for(int i = 0; i < this.keyIndex.size(); i++) {
 				if(hm.get(this.keyIndex.get(i).getFirstBM().getSourceLabel()) != null) {
+					System.out.println("masuk josh "+hm.get(this.keyIndex.get(i).getFirstBM().getSourceLabel()));
 					ArrayList<BiMap> tempBm = new ArrayList();
 					tempBm = hm.get(this.keyIndex.get(i).getFirstBM().getSourceLabel());
-					if(tempBm.size() == this.keyIndex.get(i).getKeyGraphValue().size()) {
+					System.out.println("sama gak sih "+isEqualsListBM(tempBm, this.keyIndex.get(i).getKeyGraphValue()));
+					if(isEqualsListBM(tempBm, this.keyIndex.get(i).getKeyGraphValue())) {
 						this.valueIndex.get(i).setNew(namaGraph);
+						System.out.println("remove "+this.keyIndex.get(i).getFirstBM().getSourceLabel());
 						hm.remove(this.keyIndex.get(i).getFirstBM().getSourceLabel());
+						arrInteger.add(i);
 					}
 				}
 			}
 			
+			int iterate = this.keyIndex.size();
 			ArrayList<BiMap> tempBm = new ArrayList();
 			for (Entry<String, ArrayList<BiMap>> ee : hm.entrySet()) {
 			    String key = ee.getKey();
@@ -73,8 +107,10 @@ public class GraphIndex {
 			    this.keyIndex.add(kgi);
 				ValueGraphIndex vgi = new ValueGraphIndex(namaGraph);
 				this.valueIndex.add(vgi);
+				arrInteger.add(iterate);
+				iterate++;
 			}
-			
+			StartPage.gIndexDesc.getgDesc().put(namaGraph, arrInteger);
 		}
 	}
 	
@@ -135,6 +171,8 @@ public class GraphIndex {
 	}
 	
 	public void initValue(HashMap<String, ArrayList<BiMap>> hm,String namaGraph ) {
+		int i = 0;
+		ArrayList<Integer> arrayIntger = new ArrayList<>();
 		for (Entry<String, ArrayList<BiMap>> ee : hm.entrySet()) {
 		    String key = ee.getKey();
 		    ArrayList<BiMap> values = ee.getValue();
@@ -145,7 +183,12 @@ public class GraphIndex {
 		    ValueGraphIndex v = new ValueGraphIndex(name);
 		    this.keyIndex.add(k);
 		    this.valueIndex.add(v);
+		    arrayIntger.add(i);
+		    i++;
 		}
+		
+		StartPage.gIndexDesc.getgDesc().put(namaGraph, arrayIntger);
+		
 	}
 	
 	public void destroy() {
@@ -199,6 +242,7 @@ public class GraphIndex {
 				bw.newLine();
 			}
 			bw.close();
+			StartPage.gIndexDesc.writeToFile();
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -322,5 +366,57 @@ public class GraphIndex {
 			this.namaGraph = new ArrayList<>();
 			this.namaGraph.add(namaGraph);
 		}
+	}
+	
+	public static void selectGraph(String namaGraph, String distanceFunction) {
+		System.out.println("apakah ada "+ StartPage.gIndexDesc.getgDesc().get(namaGraph).size());
+		ArrayList<Integer> tempPosition = StartPage.gIndexDesc.getgDesc().get(namaGraph);
+		ArrayList<ArrayList<String>> temp = new ArrayList<>();
+		for(int i = 0; i < tempPosition.size(); i++) {
+			if(StartPage.gpi.valueIndex.get(tempPosition.get(i)).getNamaGraph().contains(namaGraph)) {
+				temp.add(StartPage.gpi.valueIndex.get(tempPosition.get(i)).getNamaGraph());
+			}
+		}
+		
+		System.out.println("ukuran temp ialah "+temp.size());
+		
+		HashMap<String,ArrayList<Integer>> tempVValue = new HashMap<>();
+		
+		for(int i = 0; i < temp.size(); i++) {
+			ArrayList<String> lala = temp.get(i);
+			for(int j = 0; j < lala.size(); j++) {
+				if(!lala.get(j).equals(namaGraph)) {
+					for(int k = 0; k < temp.size(); k++) {
+						if(temp.contains(lala.get(j))) {
+								if (tempVValue.get(lala.get(j)) == null) {
+									System.out.println("masuk sini suliiit di tenggorokan ");
+									tempVValue.put(lala.get(j), new ArrayList<Integer>());
+								}
+								if (tempVValue.get(lala.get(j)) != null) {
+									System.out.println("masuk sini lega di tenggorokan ");
+									tempVValue.get(lala.get(j)).add(k);
+								}
+						}
+					}
+				}
+			}
+		}
+		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
+			System.out.println(" "+ee.getKey());
+		}
+		System.out.println(" print similarity ");
+		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
+			System.out.println(ee.getValue()+" "+eqluideanDistance(StartPage.gIndexDesc.getgDesc().get(namaGraph),StartPage.gIndexDesc.getgDesc().get(ee.getKey()), tempVValue.get(ee.getKey())));
+		}
+	}
+	
+	public static Double eqluideanDistance(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
+		Double score;
+		if(graphInput.size() < graphTarget.size()) {
+			score = Math.sqrt(graphTarget.size() - graphTemp.size());
+		}else {
+			score = Math.sqrt(graphInput.size() - graphTemp.size());
+		}
+		return score;
 	}
 }

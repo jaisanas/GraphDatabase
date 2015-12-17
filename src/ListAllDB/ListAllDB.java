@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
@@ -122,6 +124,7 @@ public class ListAllDB extends JPanel {
 			System.out.println("capek");
 			file.createNewFile();
 			file1.createNewFile();
+			file1List.createNewFile();
 			fileTree.createNewFile();
 			fileTreeList.createNewFile();
 		}else {
@@ -142,24 +145,38 @@ public class ListAllDB extends JPanel {
 			br = new BufferedReader(new FileReader(filePathIndex));
 			StartPage.gpi.destroy();
 			String temp = br.readLine();
-			ArrayList<BiMap> bm = new ArrayList<>();
-			ArrayList<String> graphName = new ArrayList();
+			
+			ArrayList<String> graphName;
 			ArrayList<KeyGraphIndex> keyIndex = new ArrayList<>();
 			ArrayList<ValueGraphIndex> valueIndex = new ArrayList<>();
 			BiMap tempBM = new BiMap();
 			while(temp != null) {
+				ArrayList<BiMap> bm = new ArrayList<>();
+				graphName = new ArrayList<String>();
 				if (temp.equals("[")) {
 					temp = br.readLine();
 					while(!temp.equals("]")) {
 						String [] tempOfTemp = temp.split(" ");
 						tempBM = new BiMap(tempOfTemp[0], tempOfTemp[1], tempOfTemp[2]);
+						System.out.println("tempBM "+tempBM.getString());
 						bm.add(tempBM);
 						temp = br.readLine();
 					}
 				}
 				
 				KeyGraphIndex k = new KeyGraphIndex(bm);
+				bm = null;
+				System.out.println("isi KeyGraphIndex ");
+				for(int o = 0; o < k.getKeyGraphValue().size(); o++) {
+					System.out.println(k.getKeyGraphValue().get(o).getString());
+				}
 				keyIndex.add(k);
+				System.out.println("print isi keyindex");
+				for(int it = 0; it < keyIndex.size(); it++) {
+					for(int j = 0; j < keyIndex.get(it).getKeyGraphValue().size(); j++) {
+						System.out.println(keyIndex.get(it).getKeyGraphValue().get(j).getString());
+					}
+				}
 				if(temp.equals("]")) {
 					temp = br.readLine();
 				}
@@ -168,27 +185,312 @@ public class ListAllDB extends JPanel {
 					temp = br.readLine();
 					while(!temp.equals("}")) {
 						graphName.add(temp);
+						System.out.println("temp "+temp);
 						temp = br.readLine();
 					}
 				}
 				
 				ValueGraphIndex v = new ValueGraphIndex(graphName);
+				graphName = null;
 				valueIndex.add(v);
-				
+				System.out.println("print isi value index");
+				/*for(int s = 0; s < valueIndex.size(); s++) {
+					for(int r = 0; r < valueIndex.get(s).getNamaGraph().size(); r++) {
+						System.out.println(valueIndex.get(s).getNamaGraph().get(r));
+					}
+				}*/
+				//graphName = null;
 				if(temp.equals("}")) {
 					temp = br.readLine();
 				}
 			}
 			
 			StartPage.gpi = new GraphIndex(keyIndex, valueIndex);
+			System.out.println("ngeprint");
 			StartPage.gpi.print();
+			
+			//baca file index graph list 
+			BufferedReader brIList = new BufferedReader(new FileReader(filePathIndex2));
+			String graphDesc = brIList.readLine();
+			HashMap<String,ArrayList<Integer>> gDesc = new HashMap<>();
+			while(graphDesc != null) {
+				String [] tokenGraph = graphDesc.split(" ");
+				String key = tokenGraph[0];
+				String [] positionList = tokenGraph[1].split(",");
+				ArrayList<Integer> tempInt = new ArrayList<>();
+				for(int iiter = 0; iiter < positionList.length; iiter++) {
+					tempInt.add(Integer.parseInt(positionList[iiter]));
+				}
+				gDesc.put(key, tempInt);
+				graphDesc = brIList.readLine();
+			}
+			brIList.close();
+			StartPage.gIndexDesc = null;
+			StartPage.gIndexDesc = new GraphIndexDesc(gDesc);
+			//baca graphTreeIndex
+			StartPage.graphTreeIndex = null;
+			StartPage.graphTreeIndex = new GraphTreeIndex();
+			String hashBar;
+			BufferedReader brTree = new BufferedReader(new FileReader(fileTreeIndex));
+			while((hashBar = brTree.readLine()) != null) {
+				String [] tokenBar = hashBar.split(" ");
+				String [] childBar = tokenBar[1].split(",");
+				ArrayList<String> listChild = new ArrayList<>(Arrays.asList(childBar));
+				StartPage.graphTreeIndex.getIndexTree().put(tokenBar[0], listChild);
+				listChild = null;
+			}
+			brTree.close();
+			//baca graphTreeListIndex
+			StartPage.graphTreeListIndex = null;
+			StartPage.graphTreeListIndex = new GraphTreeListIndex();
+			String gdt;
+			BufferedReader brList = new BufferedReader(new FileReader(fileTreeListIndex));
+			gdt = brList.readLine();
+			while(gdt != null) {
+				String [] tempList = gdt.split(" ");
+				GraphData dt;
+				
+				HashMap<String, ArrayList<ArrayList<String>>> graph = new HashMap<>();
+				if(tempList.length == 1) {
+					StartPage.graphTreeListIndex.getgTreeIndex().put(tempList[0], new GraphData());
+					gdt = brList.readLine();
+					String [] barLine = gdt.split(" ");
+					boolean flag = true;
+					while(barLine.length > 1) {
+						ArrayList<ArrayList<String>> edgeList = new ArrayList<>();
+						String [] edgeListEachVertex = barLine[1].split("-");
+						for(int iter = 0; iter < edgeListEachVertex.length; iter++) {
+							System.out.println("isi edge iter "+edgeListEachVertex[iter]);
+							String [] edgeArrayComma = edgeListEachVertex[iter].split(",");
+							ArrayList<String> tempEdgeList = new ArrayList<>(Arrays.asList(edgeArrayComma));
+							System.out.println(tempEdgeList);
+							System.out.println("anjing "+edgeList.size());
+							edgeList.add(tempEdgeList);
+						}
+						graph.put(barLine[0], edgeList);
+						gdt = null;barLine = null; edgeList = null;
+						gdt = brList.readLine();
+						System.out.println("why except "+gdt);
+						if(gdt != null) {
+							barLine = gdt.split(" ");
+						}else {
+							break;
+						}
+					}
+					dt = new GraphData(graph);
+					StartPage.graphTreeListIndex.getgTreeIndex().put(tempList[0],dt);
+					tempList = null;dt=null;graph=null;
+				}
+				
+			}
+			brList.close();
+			
+			StartPage.graphTreeListIndex.Print(StartPage.graphTreeIndex);
 		 }
+			
     	}catch(Exception ex) {
     		ex.printStackTrace();
     	}
     	
       }
     }
+  }
+  
+  public static void initIndex() {
+	  try {
+	    	BufferedReader br = null;
+			String filePath = StartPage.dbPath+"\\"+"jaisGraphDesc.text";
+			System.out.println(filePath);	
+			File file = new File(filePath);
+			
+			//create file index
+			String filePathIndex = StartPage.dbPath+"\\"+"jaisGraphIndex.text";
+			String filePathIndex2 = StartPage.dbPath+"\\"+"jaisGraphIndexList.text";
+			System.out.println(filePathIndex);
+			File file1 = new File(filePathIndex);
+			File file1List = new File(filePathIndex2);
+			
+			String fileTreeIndex = StartPage.dbPath+"\\"+"jaisGraphTreeIndex.text";
+			String fileTreeListIndex = StartPage.dbPath+"\\"+"jaisGraphTreeListIndex.text";
+			System.out.println(fileTreeIndex);
+			File fileTree = new File(fileTreeIndex);
+			File fileTreeList = new File(fileTreeListIndex);
+			
+			String filePathIndexPath = StartPage.dbPath+"\\"+"jaisGraphPathIndex.text";
+			File file2 = new File(filePathIndexPath);
+			
+			//create file for indexing metadata
+			String fileMetaDataPath = StartPage.dbPath+"\\"+"jaisGraphMetadataPathIndex.text";
+			File file3 = new File(fileMetaDataPath);
+			
+			if (!file.exists() && !file1.exists() && !file1List.exists() && !fileTree.exists() && !fileTreeList.exists()) {
+				System.out.println("capek");
+				file.createNewFile();
+				file1.createNewFile();
+				file1List.createNewFile();
+				fileTree.createNewFile();
+				fileTreeList.createNewFile();
+			}else {
+				StartPage.graphList = new ArrayList();
+				br = new BufferedReader(new FileReader(filePath));
+				String graphPath;
+				StartPage.graphList.clear();
+				while((graphPath = br.readLine())!= null) {
+					System.out.println(graphPath);
+					StartPage.graphList.add(graphPath);
+				}
+				
+				StartPage.gpi = new GraphIndex();
+				br = new BufferedReader(new FileReader(filePathIndex));
+				StartPage.gpi.destroy();
+				String temp = br.readLine();
+				
+				ArrayList<String> graphName;
+				ArrayList<KeyGraphIndex> keyIndex = new ArrayList<>();
+				ArrayList<ValueGraphIndex> valueIndex = new ArrayList<>();
+				BiMap tempBM = new BiMap();
+				while(temp != null) {
+					ArrayList<BiMap> bm = new ArrayList<>();
+					graphName = new ArrayList<String>();
+					if (temp.equals("[")) {
+						temp = br.readLine();
+						while(!temp.equals("]")) {
+							String [] tempOfTemp = temp.split(" ");
+							tempBM = new BiMap(tempOfTemp[0], tempOfTemp[1], tempOfTemp[2]);
+							System.out.println("tempBM "+tempBM.getString());
+							bm.add(tempBM);
+							temp = br.readLine();
+						}
+					}
+					
+					KeyGraphIndex k = new KeyGraphIndex(bm);
+					bm = null;
+					System.out.println("isi KeyGraphIndex ");
+					for(int o = 0; o < k.getKeyGraphValue().size(); o++) {
+						System.out.println(k.getKeyGraphValue().get(o).getString());
+					}
+					keyIndex.add(k);
+					System.out.println("print isi keyindex");
+					for(int it = 0; it < keyIndex.size(); it++) {
+						for(int j = 0; j < keyIndex.get(it).getKeyGraphValue().size(); j++) {
+							System.out.println(keyIndex.get(it).getKeyGraphValue().get(j).getString());
+						}
+					}
+					if(temp.equals("]")) {
+						temp = br.readLine();
+					}
+					
+					if(temp.equals("{")) {
+						temp = br.readLine();
+						while(!temp.equals("}")) {
+							graphName.add(temp);
+							System.out.println("temp "+temp);
+							temp = br.readLine();
+						}
+					}
+					
+					ValueGraphIndex v = new ValueGraphIndex(graphName);
+					graphName = null;
+					valueIndex.add(v);
+					System.out.println("print isi value index");
+					/*for(int s = 0; s < valueIndex.size(); s++) {
+						for(int r = 0; r < valueIndex.get(s).getNamaGraph().size(); r++) {
+							System.out.println(valueIndex.get(s).getNamaGraph().get(r));
+						}
+					}*/
+					//graphName = null;
+					if(temp.equals("}")) {
+						temp = br.readLine();
+					}
+				}
+				
+				StartPage.gpi = new GraphIndex(keyIndex, valueIndex);
+				System.out.println("ngeprint");
+				StartPage.gpi.print();
+				
+				//baca file index graph list 
+				//baca file index graph list 
+				BufferedReader brIList = new BufferedReader(new FileReader(filePathIndex2));
+				String graphDesc = brIList.readLine();
+				HashMap<String,ArrayList<Integer>> gDesc = new HashMap<>();
+				while(graphDesc != null) {
+					String [] tokenGraph = graphDesc.split(" ");
+					String key = tokenGraph[0];
+					String [] positionList = tokenGraph[1].split(",");
+					ArrayList<Integer> tempInt = new ArrayList<>();
+					for(int iiter = 0; iiter < positionList.length; iiter++) {
+						System.out.println("mati mati mati "+positionList[iiter]);
+						System.out.println(Integer.parseInt(positionList[iiter]));
+						tempInt.add(Integer.parseInt(positionList[iiter]));
+					}
+					gDesc.put(key, tempInt);
+					graphDesc = brIList.readLine();
+				}
+				brIList.close();
+				StartPage.gIndexDesc = null;
+				StartPage.gIndexDesc = new GraphIndexDesc(gDesc);
+				
+				//baca graphTreeIndex
+				StartPage.graphTreeIndex = null;
+				StartPage.graphTreeIndex = new GraphTreeIndex();
+				String hashBar;
+				BufferedReader brTree = new BufferedReader(new FileReader(fileTreeIndex));
+				while((hashBar = brTree.readLine()) != null) {
+					String [] tokenBar = hashBar.split(" ");
+					String [] childBar = tokenBar[1].split(",");
+					ArrayList<String> listChild = new ArrayList<>(Arrays.asList(childBar));
+					StartPage.graphTreeIndex.getIndexTree().put(tokenBar[0], listChild);
+					listChild = null;
+				}
+				brTree.close();
+				//baca graphTreeListIndex
+				StartPage.graphTreeListIndex = null;
+				StartPage.graphTreeListIndex = new GraphTreeListIndex();
+				String gdt;
+				BufferedReader brList = new BufferedReader(new FileReader(fileTreeListIndex));
+				gdt = brList.readLine();
+				while(gdt != null) {
+					String [] tempList = gdt.split(" ");
+					GraphData dt;
+					
+					HashMap<String, ArrayList<ArrayList<String>>> graph = new HashMap<>();
+					if(tempList.length == 1) {
+						StartPage.graphTreeListIndex.getgTreeIndex().put(tempList[0], new GraphData());
+						gdt = brList.readLine();
+						String [] barLine = gdt.split(" ");
+						boolean flag = true;
+						while(barLine.length > 1) {
+							ArrayList<ArrayList<String>> edgeList = new ArrayList<>();
+							String [] edgeListEachVertex = barLine[1].split("-");
+							for(int iter = 0; iter < edgeListEachVertex.length; iter++) {
+								System.out.println("isi edge iter "+edgeListEachVertex[iter]);
+								String [] edgeArrayComma = edgeListEachVertex[iter].split(",");
+								ArrayList<String> tempEdgeList = new ArrayList<>(Arrays.asList(edgeArrayComma));
+								edgeList.add(tempEdgeList);
+							}
+							graph.put(barLine[0], edgeList);
+							gdt = null;barLine = null; edgeList = null;
+							gdt = brList.readLine();
+							if(gdt != null) {
+								barLine = gdt.split(" ");
+							}else {
+								break;
+							}
+						}
+						dt = new GraphData(graph);
+						StartPage.graphTreeListIndex.getgTreeIndex().put(tempList[0],dt);
+						tempList = null;dt=null;graph=null;
+					}
+					
+				}
+				brList.close();
+				StartPage.graphTreeListIndex.Print(StartPage.graphTreeIndex);
+			 }
+				
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+  	
   }
   
   public static void initListAllDB() {
