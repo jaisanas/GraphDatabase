@@ -369,7 +369,9 @@ public class GraphIndex {
 	}
 	
 	public static void selectGraph(String namaGraph, String distanceFunction) {
-		System.out.println("apakah ada "+ StartPage.gIndexDesc.getgDesc().get(namaGraph).size());
+		System.out.println("nama graf "+namaGraph);
+		System.out.println("ukuran gIndexdesc "+StartPage.gIndexDesc.getgDesc().size());
+		System.out.println("apakah ada "+ StartPage.gIndexDesc.getgDesc().get(namaGraph));
 		ArrayList<Integer> tempPosition = StartPage.gIndexDesc.getgDesc().get(namaGraph);
 		ArrayList<ArrayList<String>> temp = new ArrayList<>();
 		for(int i = 0; i < tempPosition.size(); i++) {
@@ -384,10 +386,13 @@ public class GraphIndex {
 		
 		for(int i = 0; i < temp.size(); i++) {
 			ArrayList<String> lala = temp.get(i);
+			System.out.println("masuk sini "+lala);
 			for(int j = 0; j < lala.size(); j++) {
 				if(!lala.get(j).equals(namaGraph)) {
+					System.out.println("nama lala.get(j) "+lala.get(j));
 					for(int k = 0; k < temp.size(); k++) {
-						if(temp.contains(lala.get(j))) {
+						if(temp.get(k).contains(lala.get(j))) {
+							System.out.println("turning table "+k);
 								if (tempVValue.get(lala.get(j)) == null) {
 									System.out.println("masuk sini suliiit di tenggorokan ");
 									tempVValue.put(lala.get(j), new ArrayList<Integer>());
@@ -401,22 +406,50 @@ public class GraphIndex {
 				}
 			}
 		}
+		
 		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
 			System.out.println(" "+ee.getKey());
+			if(ee.getKey().equals("j4.mxe")) {
+				System.out.println("value "+ee.getValue());
+			}
 		}
-		System.out.println(" print similarity ");
+		System.out.println(" print similarity Euclidean Distance ");
 		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
-			System.out.println(ee.getValue()+" "+eqluideanDistance(StartPage.gIndexDesc.getgDesc().get(namaGraph),StartPage.gIndexDesc.getgDesc().get(ee.getKey()), tempVValue.get(ee.getKey())));
+			System.out.println(ee.getKey()+" "+eqluideanDistance(StartPage.gIndexDesc.getgDesc().get(namaGraph),StartPage.gIndexDesc.getgDesc().get(ee.getKey()), tempVValue.get(ee.getKey())));
 		}
 	}
 	
 	public static Double eqluideanDistance(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
 		Double score;
 		if(graphInput.size() < graphTarget.size()) {
-			score = Math.sqrt(graphTarget.size() - graphTemp.size());
+			score = Math.sqrt(graphTarget.size() * graphTarget.size() - graphTemp.size() * graphTemp.size());
 		}else {
-			score = Math.sqrt(graphInput.size() - graphTemp.size());
+			score = Math.sqrt(graphInput.size() * graphInput.size() - graphTemp.size() * graphTemp.size());
 		}
+		return score;
+	}
+	
+	public static Double Cosine (ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
+		Double score;
+		score = (getPembilang(graphInput, graphTarget, graphTemp))*(getPenyebut(graphInput, graphTarget, graphTemp));
+		return score;
+	}
+	
+	public static Double getPenyebut(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
+		Double score;
+		score = Math.sqrt(graphTemp.size()) * Math.sqrt(graphInput.size());
+		
+		return score;
+	}
+	
+	public static Double getPembilang(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
+		Double score;
+		if(graphInput.size() < graphTarget.size()) {
+			score = (double) graphTemp.size();
+		}else{
+			score = (double) graphTemp.size();
+		}
+		
 		return score;
 	}
 }
