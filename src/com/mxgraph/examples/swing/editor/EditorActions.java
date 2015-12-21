@@ -797,6 +797,520 @@ public class EditorActions
 	} 
 	
 	@SuppressWarnings("serial")
+	public static class SaveActionQuery extends AbstractAction {
+		protected boolean showDialog;
+
+		/**
+		 * 
+		 */
+		protected String lastDir = null;
+
+		/**
+		 * 
+		 */
+		public SaveActionQuery()
+		{
+			//this.showDialog = showDialog;
+		}
+
+		/**
+		 * Saves XML+PNG format.
+		 */
+		
+
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			BasicGraphEditor editor = getEditor(e);
+
+			if (editor != null)
+			{
+				mxGraphComponent graphComponent = editor.getGraphComponent();
+				mxGraph graph = graphComponent.getGraph();
+				FileFilter selectedFilter = null;
+				DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
+						"PNG+XML " + mxResources.get("file") + " (.png)");
+				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
+						"VML " + mxResources.get("file") + " (.html)");
+				String filename = null;
+				boolean dialogShown = false;
+				
+				filename = StartPage.gFilePath;
+				System.out.println("nama file "+filename);
+				Path p = Paths.get(filename);
+				String file = p.getFileName().toString();
+				try
+				{
+					String ext = filename
+							.substring(filename.lastIndexOf('.') + 1);
+					System.out.println(ext);
+					
+					if (ext.equalsIgnoreCase("svg"))
+					{
+						mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
+								.drawCells(graph, null, 1, null,
+										new CanvasFactory()
+										{
+											public mxICanvas createCanvas(
+													int width, int height)
+											{
+												mxSvgCanvas canvas = new mxSvgCanvas(
+														mxDomUtils.createSvgDocument(
+																width, height));
+												canvas.setEmbedded(true);
+
+												return canvas;
+											}
+
+										});
+
+						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
+								filename);
+					}
+					else if (ext.equalsIgnoreCase("html"))
+					{
+						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+								.createHtmlDocument(graph, null, 1, null, null)
+								.getDocumentElement()), filename);
+					}
+					else if (ext.equalsIgnoreCase("mxe")
+							|| ext.equalsIgnoreCase("xml"))
+					{
+						//GraphIndex gi = new GraphIndex();
+						Object parent = graph.getDefaultParent();
+						Object[] par = new Object[1];
+						par[0] = parent;
+						Object [] sisis = graph.getAllEdges(par);
+						System.out.println(sisis.length);
+						ArrayList<String> edgeReminder = new ArrayList();
+						HashMap<String, ArrayList<BiMap>> hm = new HashMap<String, ArrayList<BiMap>>();
+						HashMap<String,ArrayList<String>> gDt = new HashMap<>();
+						if(sisis.length > 0) {
+							mxCell sisi = (mxCell) sisis[0];
+							String idEdge = sisi.getId();
+							//edgeReminder.add(idEdge);
+							System.out.println("jais");
+							String labelSisi = graph.getLabel(sisis[0]);
+							edgeReminder.add(labelSisi);
+							System.out.println(labelSisi);
+							String [] tempEdge = labelSisi.split("\\|");
+							System.out.println("tempEdge "+tempEdge[0]);
+							String labelSource = (String) sisi.getSource().getValue();
+							String [] tempSource = labelSource.split("\\|");
+							String labelTarget = (String) sisi.getTarget().getValue();
+							String [] tempTarget = labelTarget.split("\\|");
+							BiMap bm = new BiMap(tempEdge[0]+tempEdge[1],tempSource[0]+tempSource[1],tempTarget[0]+tempTarget[1]);
+							System.out.println(bm.getEdgeLabel()+"|"+bm.getSourceLabel()+"|"+bm.getTargetLabel());
+							System.out.println(bm.getEdgeLabel().equals(bm.getSourceLabel()));
+							boolean flag = false;
+							if(hm.get(bm.getSourceLabel()) == null) {
+								hm.put(bm.getSourceLabel(), new ArrayList<BiMap>());
+								hm.get(bm.getSourceLabel()).add(bm);
+							}else {
+								hm.get(bm.getSourceLabel()).add(bm);
+							}
+							
+							if(gDt.get(bm.getSourceLabel()) == null) {
+								gDt.put(bm.getSourceLabel(), new ArrayList<String>());
+								gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+							} else {
+								gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+							}
+						  for(int i = 1; i < sisis.length; i++) {
+							//if(!edgeReminder.contains(idEdge)) {
+								sisi = (mxCell) sisis[i];
+								idEdge = sisi.getId();
+								System.out.println(idEdge);
+								System.out.println("jais");
+								labelSisi = graph.getLabel(sisis[i]);
+								if(!edgeReminder.contains(labelSisi)) {
+									edgeReminder.add(labelSisi);
+									System.out.println(labelSisi);
+									tempEdge = labelSisi.split("\\|");
+									System.out.println("tempEdge "+tempEdge[0]);
+									labelSource = (String) sisi.getSource().getValue();
+									tempSource = labelSource.split("\\|");
+									labelTarget = (String) sisi.getTarget().getValue();
+									tempTarget = labelTarget.split("\\|");
+									bm = new BiMap(tempEdge[0]+tempEdge[1],tempSource[0]+tempSource[1],tempTarget[0]+tempTarget[1]);
+									System.out.println(bm.getEdgeLabel()+"|"+bm.getSourceLabel()+"|"+bm.getTargetLabel());
+									System.out.println(bm.getEdgeLabel().equals(bm.getSourceLabel()));
+									if(i == sisis.length -1) {
+										flag = true;
+									}
+									if(hm.get(bm.getSourceLabel()) == null) {
+										hm.put(bm.getSourceLabel(), new ArrayList<BiMap>());
+										hm.get(bm.getSourceLabel()).add(bm);
+									}else {
+										hm.get(bm.getSourceLabel()).add(bm);
+									}
+									
+									if(gDt.get(bm.getSourceLabel()) == null) {
+										gDt.put(bm.getSourceLabel(), new ArrayList<String>());
+										gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+									} else {
+										gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+									}
+								}
+							//}
+							//System.out.println("id sisi : "+y+" label sisi "+x+" id simpul awal : "+sisi.getSource().getId()+" simpul asal : "+sisi.getSource().getValue()+", id simpul target "+ sisi.getTarget().getId()+" simpul target "+sisi.getSource().getValue() );
+						 }
+						  System.out.println("ukuran banyak sisi "+sisis.length);
+						  System.out.println("ukuran edgeReminder "+edgeReminder.size());
+						}
+						for (Entry<String, ArrayList<BiMap>> ee : hm.entrySet()) {
+						    String key = ee.getKey();
+						    ArrayList<BiMap> values = ee.getValue();
+						    // TODO: Do something.
+						    System.out.println("hashmap key "+key);
+						   for(int i = 0; i < values.size(); i++) {
+							   System.out.println(values.get(i).getString());
+						   }
+						    
+						}
+						
+						//migrate data
+						HashMap<String,ArrayList<ArrayList<String>>> dt = new HashMap<>();
+						for (Entry<String, ArrayList<String>> ee : gDt.entrySet()) {
+							ArrayList<String> a = new ArrayList<>();
+							a = ee.getValue();
+							String key = ee.getKey();
+							ArrayList<ArrayList<String>> temp = new ArrayList<>();
+							temp.add(a);
+							dt.put(key, temp);
+							temp = null;
+						}
+						
+						GraphData query = new GraphData(dt, file);
+						//StartPage.graphTreeIndex = StartPage.graphTreeListIndex.union(file, dtX, StartPage.graphTreeIndex);
+						HashMap<String,Double> hmm = StartPage.graphTreeListIndex.Search(query, StartPage.tHold);
+						StartPage.graphTreeListIndex.PrintResult(hmm);
+						System.out.println("save as mxe");
+						mxCodec codec = new mxCodec();
+						String xml = mxXmlUtils.getXml(codec.encode(graph
+								.getModel()));
+						Object [] vertices = graph.getChildVertices(graph.getDefaultParent());
+						
+						mxUtils.writeFile(xml, filename);
+
+						editor.setModified(false);
+						editor.setCurrentFile(new File(filename));
+					}
+					else if (ext.equalsIgnoreCase("txt"))
+					{
+						String content = mxGdCodec.encode(graph);
+
+						mxUtils.writeFile(content, filename);
+					}
+					else
+					{
+						Color bg = null;
+
+						if ((!ext.equalsIgnoreCase("gif") && !ext
+								.equalsIgnoreCase("png"))
+								|| JOptionPane.showConfirmDialog(
+										graphComponent, mxResources
+												.get("transparentBackground")) != JOptionPane.YES_OPTION)
+						{
+							bg = graphComponent.getBackground();
+						}
+
+						if (selectedFilter == xmlPngFilter
+								|| (editor.getCurrentFile() != null
+										&& ext.equalsIgnoreCase("png") && !dialogShown))
+						{
+							//saveXmlPng(editor, filename, bg);
+						}
+						else
+						{
+							BufferedImage image = mxCellRenderer
+									.createBufferedImage(graph, null, 1, bg,
+											graphComponent.isAntiAlias(), null,
+											graphComponent.getCanvas());
+
+							if (image != null)
+							{
+								ImageIO.write(image, ext, new File(filename));
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(graphComponent,
+										mxResources.get("noImageData"));
+							}
+						}
+					}
+				}
+				catch (Throwable ex)
+				{
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(graphComponent,
+							ex.toString(), mxResources.get("error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	} 
+	
+	@SuppressWarnings("serial")
+	public static class SaveActionQueryBTree extends AbstractAction {
+		protected boolean showDialog;
+
+		/**
+		 * 
+		 */
+		protected String lastDir = null;
+
+		/**
+		 * 
+		 */
+		public SaveActionQueryBTree()
+		{
+			//this.showDialog = showDialog;
+		}
+
+		/**
+		 * Saves XML+PNG format.
+		 */
+		
+
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			BasicGraphEditor editor = getEditor(e);
+
+			if (editor != null)
+			{
+				mxGraphComponent graphComponent = editor.getGraphComponent();
+				mxGraph graph = graphComponent.getGraph();
+				FileFilter selectedFilter = null;
+				DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
+						"PNG+XML " + mxResources.get("file") + " (.png)");
+				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
+						"VML " + mxResources.get("file") + " (.html)");
+				String filename = null;
+				boolean dialogShown = false;
+				
+				filename = StartPage.gFilePath;
+				System.out.println("nama file "+filename);
+				Path p = Paths.get(filename);
+				String file = p.getFileName().toString();
+				try
+				{
+					String ext = filename
+							.substring(filename.lastIndexOf('.') + 1);
+					System.out.println(ext);
+					
+					if (ext.equalsIgnoreCase("svg"))
+					{
+						mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
+								.drawCells(graph, null, 1, null,
+										new CanvasFactory()
+										{
+											public mxICanvas createCanvas(
+													int width, int height)
+											{
+												mxSvgCanvas canvas = new mxSvgCanvas(
+														mxDomUtils.createSvgDocument(
+																width, height));
+												canvas.setEmbedded(true);
+
+												return canvas;
+											}
+
+										});
+
+						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
+								filename);
+					}
+					else if (ext.equalsIgnoreCase("html"))
+					{
+						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+								.createHtmlDocument(graph, null, 1, null, null)
+								.getDocumentElement()), filename);
+					}
+					else if (ext.equalsIgnoreCase("mxe")
+							|| ext.equalsIgnoreCase("xml"))
+					{
+						//GraphIndex gi = new GraphIndex();
+						Object parent = graph.getDefaultParent();
+						Object[] par = new Object[1];
+						par[0] = parent;
+						Object [] sisis = graph.getAllEdges(par);
+						System.out.println(sisis.length);
+						ArrayList<String> edgeReminder = new ArrayList();
+						HashMap<String, ArrayList<BiMap>> hm = new HashMap<String, ArrayList<BiMap>>();
+						HashMap<String,ArrayList<String>> gDt = new HashMap<>();
+						if(sisis.length > 0) {
+							mxCell sisi = (mxCell) sisis[0];
+							String idEdge = sisi.getId();
+							//edgeReminder.add(idEdge);
+							System.out.println("jais");
+							String labelSisi = graph.getLabel(sisis[0]);
+							edgeReminder.add(labelSisi);
+							System.out.println(labelSisi);
+							String [] tempEdge = labelSisi.split("\\|");
+							System.out.println("tempEdge "+tempEdge[0]);
+							String labelSource = (String) sisi.getSource().getValue();
+							String [] tempSource = labelSource.split("\\|");
+							String labelTarget = (String) sisi.getTarget().getValue();
+							String [] tempTarget = labelTarget.split("\\|");
+							BiMap bm = new BiMap(tempEdge[0]+tempEdge[1],tempSource[0]+tempSource[1],tempTarget[0]+tempTarget[1]);
+							System.out.println(bm.getEdgeLabel()+"|"+bm.getSourceLabel()+"|"+bm.getTargetLabel());
+							System.out.println(bm.getEdgeLabel().equals(bm.getSourceLabel()));
+							boolean flag = false;
+							if(hm.get(bm.getSourceLabel()) == null) {
+								hm.put(bm.getSourceLabel(), new ArrayList<BiMap>());
+								hm.get(bm.getSourceLabel()).add(bm);
+							}else {
+								hm.get(bm.getSourceLabel()).add(bm);
+							}
+							
+							if(gDt.get(bm.getSourceLabel()) == null) {
+								gDt.put(bm.getSourceLabel(), new ArrayList<String>());
+								gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+							} else {
+								gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+							}
+						  for(int i = 1; i < sisis.length; i++) {
+							//if(!edgeReminder.contains(idEdge)) {
+								sisi = (mxCell) sisis[i];
+								idEdge = sisi.getId();
+								System.out.println(idEdge);
+								System.out.println("jais");
+								labelSisi = graph.getLabel(sisis[i]);
+								if(!edgeReminder.contains(labelSisi)) {
+									edgeReminder.add(labelSisi);
+									System.out.println(labelSisi);
+									tempEdge = labelSisi.split("\\|");
+									System.out.println("tempEdge "+tempEdge[0]);
+									labelSource = (String) sisi.getSource().getValue();
+									tempSource = labelSource.split("\\|");
+									labelTarget = (String) sisi.getTarget().getValue();
+									tempTarget = labelTarget.split("\\|");
+									bm = new BiMap(tempEdge[0]+tempEdge[1],tempSource[0]+tempSource[1],tempTarget[0]+tempTarget[1]);
+									System.out.println(bm.getEdgeLabel()+"|"+bm.getSourceLabel()+"|"+bm.getTargetLabel());
+									System.out.println(bm.getEdgeLabel().equals(bm.getSourceLabel()));
+									if(i == sisis.length -1) {
+										flag = true;
+									}
+									if(hm.get(bm.getSourceLabel()) == null) {
+										hm.put(bm.getSourceLabel(), new ArrayList<BiMap>());
+										hm.get(bm.getSourceLabel()).add(bm);
+									}else {
+										hm.get(bm.getSourceLabel()).add(bm);
+									}
+									
+									if(gDt.get(bm.getSourceLabel()) == null) {
+										gDt.put(bm.getSourceLabel(), new ArrayList<String>());
+										gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+									} else {
+										gDt.get(bm.getSourceLabel()).add(bm.getEdgeLabel());
+									}
+								}
+							//}
+							//System.out.println("id sisi : "+y+" label sisi "+x+" id simpul awal : "+sisi.getSource().getId()+" simpul asal : "+sisi.getSource().getValue()+", id simpul target "+ sisi.getTarget().getId()+" simpul target "+sisi.getSource().getValue() );
+						 }
+						  System.out.println("ukuran banyak sisi "+sisis.length);
+						  System.out.println("ukuran edgeReminder "+edgeReminder.size());
+						}
+						for (Entry<String, ArrayList<BiMap>> ee : hm.entrySet()) {
+						    String key = ee.getKey();
+						    ArrayList<BiMap> values = ee.getValue();
+						    // TODO: Do something.
+						    System.out.println("hashmap key "+key);
+						   for(int i = 0; i < values.size(); i++) {
+							   System.out.println(values.get(i).getString());
+						   }
+						    
+						}
+						
+						//migrate data
+						HashMap<String,ArrayList<ArrayList<String>>> dt = new HashMap<>();
+						for (Entry<String, ArrayList<String>> ee : gDt.entrySet()) {
+							ArrayList<String> a = new ArrayList<>();
+							a = ee.getValue();
+							String key = ee.getKey();
+							ArrayList<ArrayList<String>> temp = new ArrayList<>();
+							temp.add(a);
+							dt.put(key, temp);
+							temp = null;
+						}
+						
+						GraphData query = new GraphData(dt, file);
+						//StartPage.graphTreeIndex = StartPage.graphTreeListIndex.union(file, dtX, StartPage.graphTreeIndex);
+						HashMap<String,Double> hmm = StartPage.graphTreeListIndex.searchByModification(query, StartPage.tHold);
+						StartPage.graphTreeListIndex.PrintResult(hmm);
+						System.out.println("save as mxe");
+						mxCodec codec = new mxCodec();
+						String xml = mxXmlUtils.getXml(codec.encode(graph
+								.getModel()));
+						Object [] vertices = graph.getChildVertices(graph.getDefaultParent());
+						
+						mxUtils.writeFile(xml, filename);
+
+						editor.setModified(false);
+						editor.setCurrentFile(new File(filename));
+					}
+					else if (ext.equalsIgnoreCase("txt"))
+					{
+						String content = mxGdCodec.encode(graph);
+
+						mxUtils.writeFile(content, filename);
+					}
+					else
+					{
+						Color bg = null;
+
+						if ((!ext.equalsIgnoreCase("gif") && !ext
+								.equalsIgnoreCase("png"))
+								|| JOptionPane.showConfirmDialog(
+										graphComponent, mxResources
+												.get("transparentBackground")) != JOptionPane.YES_OPTION)
+						{
+							bg = graphComponent.getBackground();
+						}
+
+						if (selectedFilter == xmlPngFilter
+								|| (editor.getCurrentFile() != null
+										&& ext.equalsIgnoreCase("png") && !dialogShown))
+						{
+							//saveXmlPng(editor, filename, bg);
+						}
+						else
+						{
+							BufferedImage image = mxCellRenderer
+									.createBufferedImage(graph, null, 1, bg,
+											graphComponent.isAntiAlias(), null,
+											graphComponent.getCanvas());
+
+							if (image != null)
+							{
+								ImageIO.write(image, ext, new File(filename));
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(graphComponent,
+										mxResources.get("noImageData"));
+							}
+						}
+					}
+				}
+				catch (Throwable ex)
+				{
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(graphComponent,
+							ex.toString(), mxResources.get("error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("serial")
 	public static class SaveAction extends AbstractAction
 	{
 		/**

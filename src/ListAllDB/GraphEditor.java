@@ -78,8 +78,8 @@ public class GraphEditor extends BasicGraphEditor
 		
 		// Creates the shapes palette
 		EditorPalette shapesPalette = insertPalette(mxResources.get("shapes"));
-		EditorPalette imagesPalette = insertPalette(mxResources.get("images"));
-		EditorPalette symbolsPalette = insertPalette(mxResources.get("symbols"));
+		//EditorPalette imagesPalette = insertPalette(mxResources.get("images"));
+		//EditorPalette symbolsPalette = insertPalette(mxResources.get("symbols"));
 
 		// Sets the edge template to be used for creating new edges if an edge
 		// is clicked in the shape palette
@@ -116,7 +116,7 @@ public class GraphEditor extends BasicGraphEditor
 		});
 
 		// Adds some template cells for dropping into the graph
-		shapesPalette
+		/*shapesPalette
 				.addTemplate(
 						"Container",
 						new ImageIcon(
@@ -159,7 +159,7 @@ public class GraphEditor extends BasicGraphEditor
 						new ImageIcon(
 								GraphEditor.class
 										.getResource("/com/mxgraph/examples/swing/images/doublerectangle.png")),
-						"rectangle;shape=doubleRectangle", 160, 120, "Double Rectangle");
+						"rectangle;shape=doubleRectangle", 160, 120, "Double Rectangle");*/
 		shapesPalette
 				.addTemplate(
 						"Ellipse",
@@ -167,7 +167,7 @@ public class GraphEditor extends BasicGraphEditor
 								GraphEditor.class
 										.getResource("/com/mxgraph/examples/swing/images/ellipse.png")),
 						"ellipse", 160, 160, "Ellipse");
-		shapesPalette
+		/*shapesPalette
 				.addTemplate(
 						"Double Ellipse",
 						new ImageIcon(
@@ -221,8 +221,8 @@ public class GraphEditor extends BasicGraphEditor
 						"Cloud",
 						new ImageIcon(
 								GraphEditor.class
-										.getResource("/com/mxgraph/examples/swing/images/cloud.png")),
-						"ellipse;shape=cloud", 160, 120, "");
+										.getResource("/com/mxgraph/examples/swing/images/cloud.png"*//*)),*/
+						/*"ellipse;shape=cloud", 160, 120, "");*/
 
 		shapesPalette
 				.addEdgeTemplate(
@@ -260,7 +260,7 @@ public class GraphEditor extends BasicGraphEditor
 										.getResource("/com/mxgraph/examples/swing/images/arrow.png")),
 						"arrow", 120, 120, "");
 
-		imagesPalette
+		/*imagesPalette
 				.addTemplate(
 						"Bell",
 						new ImageIcon(
@@ -452,7 +452,7 @@ public class GraphEditor extends BasicGraphEditor
 								GraphEditor.class
 										.getResource("/com/mxgraph/examples/swing/images/timer.png")),
 						"roundImage;image=/com/mxgraph/examples/swing/images/timer.png",
-						80, 80, "Timer");
+						80, 80, "Timer");*/
 	}
 
 	/**

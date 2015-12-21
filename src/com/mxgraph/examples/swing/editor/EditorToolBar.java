@@ -57,7 +57,7 @@ public class EditorToolBar extends JToolBar
 				.createEmptyBorder(3, 3, 3, 3), getBorder()));
 		setFloatable(false);
 
-		add(editor.bind("New", new NewAction(),
+		/*add(editor.bind("New", new NewAction(),
 				"/com/mxgraph/examples/swing/images/new.gif"));
 		add(editor.bind("Open", new OpenAction(),
 				"/com/mxgraph/examples/swing/images/open.gif"));
@@ -88,7 +88,7 @@ public class EditorToolBar extends JToolBar
 		add(editor.bind("Undo", new HistoryAction(true),
 				"/com/mxgraph/examples/swing/images/undo.gif"));
 		add(editor.bind("Redo", new HistoryAction(false),
-				"/com/mxgraph/examples/swing/images/redo.gif"));
+				"/com/mxgraph/examples/swing/images/redo.gif"));*/
 
 		addSeparator();
 
@@ -149,7 +149,7 @@ public class EditorToolBar extends JToolBar
 
 		addSeparator();
 
-		add(editor.bind("Bold", new FontStyleAction(true),
+		/*add(editor.bind("Bold", new FontStyleAction(true),
 				"/com/mxgraph/examples/swing/images/bold.gif"));
 		add(editor.bind("Italic", new FontStyleAction(false),
 				"/com/mxgraph/examples/swing/images/italic.gif"));
@@ -164,16 +164,16 @@ public class EditorToolBar extends JToolBar
 				"/com/mxgraph/examples/swing/images/center.gif"));
 		add(editor.bind("Right", new KeyValueAction(mxConstants.STYLE_ALIGN,
 				mxConstants.ALIGN_RIGHT),
-				"/com/mxgraph/examples/swing/images/right.gif"));
+				"/com/mxgraph/examples/swing/images/right.gif"));*/
 
 		addSeparator();
 
-		add(editor.bind("Font", new ColorAction("Font",
+		/*add(editor.bind("Font", new ColorAction("Font",
 				mxConstants.STYLE_FONTCOLOR),
 				"/com/mxgraph/examples/swing/images/fontcolor.gif"));
 		add(editor.bind("Stroke", new ColorAction("Stroke",
 				mxConstants.STYLE_STROKECOLOR),
-				"/com/mxgraph/examples/swing/images/linecolor.gif"));
+				"/com/mxgraph/examples/swing/images/linecolor.gif"));*/
 		add(editor.bind("Fill", new ColorAction("Fill",
 				mxConstants.STYLE_FILLCOLOR),
 				"/com/mxgraph/examples/swing/images/fillcolor.gif"));

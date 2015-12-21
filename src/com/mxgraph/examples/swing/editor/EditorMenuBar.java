@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 
+import ListAllDB.StartPage;
+
 import com.mxgraph.analysis.StructuralException;
 import com.mxgraph.analysis.mxGraphProperties.GraphType;
 import com.mxgraph.analysis.mxAnalysisGraph;
@@ -87,11 +89,9 @@ public class EditorMenuBar extends JMenuBar
 
 		JMenu menu = null;
 		JMenu submenu = null;
-		menu = add(new JMenu(mxResources.get("Save Graph in DB")));
-		menu.add(editor.bind(mxResources.get("save database"),new EditorActions.SaveActionDB(),"/com/mxgraph/examples/swing/images/save.gif"));
+		
 		// Creates the file menu
 		menu = add(new JMenu(mxResources.get("file")));
-
 		menu.add(editor.bind(mxResources.get("new"), new NewAction(), "/com/mxgraph/examples/swing/images/new.gif"));
 		menu.add(editor.bind(mxResources.get("openFile"), new OpenAction(), "/com/mxgraph/examples/swing/images/open.gif"));
 		menu.add(editor.bind(mxResources.get("importStencil"), new ImportAction(), "/com/mxgraph/examples/swing/images/open.gif"));
@@ -104,12 +104,14 @@ public class EditorMenuBar extends JMenuBar
 		menu.addSeparator();
 
 		menu.add(editor.bind(mxResources.get("pageSetup"), new PageSetupAction(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
+		if (StartPage.ModeSearching.equals("s2")) menu.add(editor.bind(mxResources.get("pageSetup"), new EditorActions.SaveActionQueryBTree(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
+		menu.add(editor.bind(mxResources.get("pageSetup la"), new EditorActions.SaveActionQueryBTree(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
 		menu.add(editor.bind(mxResources.get("print"), new PrintAction(), "/com/mxgraph/examples/swing/images/print.gif"));
-
+		if (StartPage.ModeSearching.equals("s1")) menu.add(editor.bind(mxResources.get("print la"), new EditorActions.SaveActionQuery(), "/com/mxgraph/examples/swing/images/print.gif"));
 		menu.addSeparator();
 
 		menu.add(editor.bind(mxResources.get("exit"), new ExitAction()));
-
+		/*
 		// Creates the edit menu
 		menu = add(new JMenu(mxResources.get("edit")));
 
@@ -142,9 +144,9 @@ public class EditorMenuBar extends JMenuBar
 		JMenuItem item = menu.add(new TogglePropertyItem(graphComponent, mxResources.get("pageLayout"), "PageVisible", true,
 				new ActionListener()
 				{
-					/**
+					*//**
 					 * 
-					 */
+					 *//*
 					public void actionPerformed(ActionEvent e)
 					{
 						if (graphComponent.isPageVisible() && graphComponent.isCenterPage())
@@ -160,10 +162,10 @@ public class EditorMenuBar extends JMenuBar
 
 		item.addActionListener(new ActionListener()
 		{
-			/*
+			
 			 * (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-			 */
+			 
 			public void actionPerformed(ActionEvent e)
 			{
 				if (e.getSource() instanceof TogglePropertyItem)
@@ -176,10 +178,10 @@ public class EditorMenuBar extends JMenuBar
 						// Scrolls the view to the center
 						SwingUtilities.invokeLater(new Runnable()
 						{
-							/*
+							
 							 * (non-Javadoc)
 							 * @see java.lang.Runnable#run()
-							 */
+							 
 							public void run()
 							{
 								graphComponent.scrollToCenter(true);
@@ -334,9 +336,9 @@ public class EditorMenuBar extends JMenuBar
 
 		submenu.add(new TogglePropertyItem(graphComponent, mxResources.get("preferPageSize"), "PreferPageSize", true, new ActionListener()
 		{
-			/**
+			*//**
 			 * 
-			 */
+			 *//*
 			public void actionPerformed(ActionEvent e)
 			{
 				graphComponent.zoomAndCenter();
@@ -362,9 +364,9 @@ public class EditorMenuBar extends JMenuBar
 
 		submenu.add(new TogglePropertyItem(graphComponent, mxResources.get("centerPage"), "CenterPage", true, new ActionListener()
 		{
-			/**
+			*//**
 			 * 
-			 */
+			 *//*
 			public void actionPerformed(ActionEvent e)
 			{
 				if (graphComponent.isPageVisible() && graphComponent.isCenterPage())
@@ -436,9 +438,9 @@ public class EditorMenuBar extends JMenuBar
 			
 			menu.add(new AbstractAction(lafs[i].getName())
 			{
-				/**
+				*//**
 				 * 
-				 */
+				 *//*
 				private static final long serialVersionUID = 7588919504149148501L;
 
 				public void actionPerformed(ActionEvent e)
@@ -506,15 +508,15 @@ public class EditorMenuBar extends JMenuBar
 		item = menu.add(new JMenuItem(mxResources.get("aboutGraphEditor")));
 		item.addActionListener(new ActionListener()
 		{
-			/*
+			
 			 * (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-			 */
+			 
 			public void actionPerformed(ActionEvent e)
 			{
 				editor.about();
 			}
-		});
+		});*/
 	}
 
 	/**

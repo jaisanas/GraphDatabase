@@ -51,6 +51,9 @@ public class StartPage extends JFrame {
 	public static GraphTreeListIndex  graphTreeListIndex;
 	public static GraphIndexDesc gIndexDesc;
 	public static NVertexEachGraph nVertex;
+	public static Double tHold;
+	public static String ModeSearching;
+	public static String ModeSimilarity;
 	/**
 	 * Launch the application.
 	 */

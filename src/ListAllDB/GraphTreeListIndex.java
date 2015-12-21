@@ -19,6 +19,7 @@ public class GraphTreeListIndex {
 			this.gTreeIndex.put(namaGraph, dt);
 		}
 		
+	
 	}
 	
 	public GraphTreeListIndex() {
@@ -456,6 +457,186 @@ public class GraphTreeListIndex {
 		return tempTree;
 	}
 	
+	public void PrintResult(HashMap<String,Double> hm) {
+		System.out.println("====================================================");
+		System.out.println("============Graph BTree Index result================");
+		System.out.println("====================================================");
+		if(hm == null) {
+			System.out.println("kosong");
+		}else {
+			for (Entry<String,Double> ee : hm.entrySet()) {
+				System.out.println(ee.getKey()+" "+ee.getValue());
+			}
+		}
+	}
+	
+	public HashMap<String,Double> Search(GraphData query,Double thold) {
+		HashMap<String,Double> listCandidate = new HashMap<>();
+		GraphData tempRoot0 = this.gTreeIndex.get("root_0");
+		if(!isNeverhappened(query, tempRoot0)) {
+			listCandidate = null;
+		}else {
+				if(thold < cariScore(query, tempRoot0)) {
+					listCandidate = null;
+				} else {
+					ArrayList<String> anakRoot0 = StartPage.graphTreeIndex.getIndexTree().get("root_0");
+					for(int i = 0; i < anakRoot0.size(); i++) {
+						if(thold >= cariScore(query,this.gTreeIndex.get(anakRoot0.get(i)))) {
+							ArrayList<String> anakRootI = StartPage.graphTreeIndex.getIndexTree().get(anakRoot0.get(i));
+							for(int j = 0; j < anakRootI.size(); j++) {
+							     if (thold >= cariScore(query, this.gTreeIndex.get(anakRootI.get(j))))
+									listCandidate.put(anakRootI.get(j), cariScore(query, this.gTreeIndex.get(anakRootI.get(j))));
+						    }
+						}
+					}
+			  }
+		}
+		
+		return listCandidate;
+	}
+	
+	public Double cariScore(GraphData query,GraphData target) {
+		Double scoreDistance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)==null) {
+					scoreDistance++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						scoreDistance = scoreDistance + 0.50;
+					} 
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				
+				if(queryMap.get(key)==null) {
+					scoreDistance++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						scoreDistance = scoreDistance + 0.50;
+					} 
+				}
+			}
+		}
+		
+		return scoreDistance;
+	}
+	
+	public HashMap<String,Double> searchByModification(GraphData query, Double thold) {
+		HashMap<String,Double> finaList = new HashMap<>();
+		//cari candidate anak
+		ArrayList<String> childList = StartPage.graphTreeIndex.getIndexTree().get("root_0");
+		ArrayList<String> temp = new ArrayList<>();
+		temp.add(childList.get(0));
+		int j = 0;
+		for(int i = 0; i < childList.size(); i++) {
+			if(i != j) {
+				if(cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) == cariScoreModification(query, this.gTreeIndex.get(temp.get(j)))) {
+					temp.add(childList.get(i));
+					j++;
+				} else if (cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) > cariScoreModification(query, this.gTreeIndex.get(temp.get(j)))) {
+					temp = null;
+					temp = new ArrayList<>();
+					j = 0;
+					temp.add(childList.get(i));
+				}
+			}
+		}
+		
+		GraphData target = this.gTreeIndex.get("root_0");
+		if(cariScoreModification(query, target) >= 0.50) {
+			for(int i = 0; i < temp.size(); i++) {
+				ArrayList<String> tempX = new ArrayList<>();
+				tempX = StartPage.graphTreeIndex.getIndexTree().get(temp.get(i));
+				for(int k = 0; k < tempX.size(); k++) {
+					GraphData targetX = this.gTreeIndex.get(tempX.get(k));
+					if(cariScore(query, targetX) <= thold) {
+						finaList.put(tempX.get(j), cariScore(query, targetX));
+					}
+				}
+			}
+		}else {
+			finaList = null;
+		}
+		
+		return finaList;
+	}
+	
+	public boolean isNeverhappened(GraphData query, GraphData target) {
+		boolean flag = false;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+			String key = ee.getKey();
+			ArrayList<ArrayList<String>> value = ee.getValue();
+			if(targetMap.get(key)!=null) {
+				flag = true;
+			}
+		}
+		
+		return flag;
+
+	}
+	
+	public boolean isContain(ArrayList<ArrayList<String>> a1, ArrayList<String> a2) {
+		boolean flag = false;
+		for(int i = 0; i < a1.size(); i++) {
+			if(compare(a1.get(i), a2)) {
+				flag = true;
+			}
+		}
+		
+		return flag;
+	}
+	
+	
+	
+	public Double cariScoreModification(GraphData query,GraphData target) {
+		Double doubleScore = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+			String key = ee.getKey();
+			ArrayList<ArrayList<String>> value = ee.getValue();
+			if(targetMap.get(key) != null) {
+				if(isContain(targetMap.get(key), value.get(0))) {
+					doubleScore = doubleScore++;
+				}else {
+					doubleScore = doubleScore + 0.50;
+				  }
+				}
+			}
+		return doubleScore;
+	}
+	
+	public ArrayList<String> getParentCandidate(String tempRoot0, GraphData query) {
+		ArrayList<String> temp = new ArrayList<>();
+		ArrayList<String> childList = StartPage.graphTreeIndex.getIndexTree().get("root_0");
+		if(childList.size() != 0) temp.add(childList.get(0));
+		int j = 0;
+		for(int i = 0; i < childList.size(); i++) {
+			if(i != j) {
+				if(cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) == cariScoreModification(query, this.gTreeIndex.get(temp.get(j)))) {
+					temp.add(childList.get(i));
+					j++;
+				} else if (cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) > cariScoreModification(query, this.gTreeIndex.get(temp.get(j)))) {
+					temp = null;
+					temp = new ArrayList<>();
+					j = 0;
+					temp.add(childList.get(i));
+				}
+			}
+		}
+		
+		return temp;
+	}	
 	public void union(String namaGraph, GraphData dt ) {
 		System.out.println(this.gTreeIndex == null);
 		if(this.gTreeIndex.size() == 0) {

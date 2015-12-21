@@ -266,9 +266,31 @@ public class ModifyDB extends JDialog {
 				 ListAllDB.initIndex();
 				 System.out.println(" select query ");
 				 GraphIndex.selectGraph(partCommands[4], partCommands[6]);
-				 
+			 }else if(partCommands.length == 9) {
+				 try{
+					 ListAllDB.initIndex();
+					 System.out.println("select by tree index ");
+					 File fileTemp = new File(StartPage.dbPath+"\\"+"temp.mxe");
+					 String filePathGraph = StartPage.dbPath+"\\"+"temp.mxe";
+					 if(!fileTemp.exists()) {
+						 fileTemp.createNewFile();
+					 }
+					 StartPage.gFilePath = filePathGraph;
+					 FileWriter fw1 = new FileWriter(fileTemp.getAbsoluteFile());
+					 BufferedWriter bw1 = new BufferedWriter(fw1);
+					 bw1.write("<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/></root></mxGraphModel>");
+					 bw1.close();
+					 JOptionPane.showMessageDialog(null,"Succeed to create graph temp.mxe <br> for next searching similarity");
+					 StartPage.tHold = Double.parseDouble(partCommands[6]);
+					 StartPage.ModeSearching = partCommands[8];
+					 GraphEditor.initGraphEditor(filePathGraph);
+					 textField.setText("");
+				 }catch(Exception ex) {
+					 ex.printStackTrace();
+					 JOptionPane.showMessageDialog(null,"No such graph temp.mxe or failed to search via btree index");
+				 }
 			 }
-			}
+		   }
 		});
 		
 		

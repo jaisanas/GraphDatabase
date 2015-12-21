@@ -429,7 +429,7 @@ public class GraphIndex {
 		return score;
 	}
 	
-	public static Double Cosine (ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
+	public static Double cosineSimilarity(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
 		Double score;
 		score = (getPembilang(graphInput, graphTarget, graphTemp))*(getPenyebut(graphInput, graphTarget, graphTemp));
 		return score;
