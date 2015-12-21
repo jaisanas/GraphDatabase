@@ -504,7 +504,7 @@ public class GraphTreeListIndex {
 				String key = ee.getKey();
 				ArrayList<ArrayList<String>> value = ee.getValue();
 				if(targetMap.get(key)==null) {
-					scoreDistance++;
+					scoreDistance = scoreDistance + 1.00;
 				}else {
 					if(!isContain(targetMap.get(key), value.get(0))) {
 						scoreDistance = scoreDistance + 0.50;
@@ -549,16 +549,22 @@ public class GraphTreeListIndex {
 				}
 			}
 		}
-		
+		System.out.println("ukuran temp ialah "+temp.size());
+		System.out.println("tempnya ialah "+temp.get(0));
 		GraphData target = this.gTreeIndex.get("root_0");
+		System.out.println("ukurannya yaitu "+cariScoreModification(query, target));
 		if(cariScoreModification(query, target) >= 0.50) {
+			System.out.println("masuk yang sebelah sini >= 0.50 ");
 			for(int i = 0; i < temp.size(); i++) {
 				ArrayList<String> tempX = new ArrayList<>();
+				System.out.println("temp isinya "+temp.get(i));
 				tempX = StartPage.graphTreeIndex.getIndexTree().get(temp.get(i));
+				System.out.println("ukuran tempX yaitu "+tempX.size());
 				for(int k = 0; k < tempX.size(); k++) {
 					GraphData targetX = this.gTreeIndex.get(tempX.get(k));
+					System.out.println(tempX.get(k)+" ukurannya "+cariScore(query, targetX));
 					if(cariScore(query, targetX) <= thold) {
-						finaList.put(tempX.get(j), cariScore(query, targetX));
+						finaList.put(tempX.get(k), cariScore(query, targetX));
 					}
 				}
 			}
@@ -606,13 +612,16 @@ public class GraphTreeListIndex {
 			String key = ee.getKey();
 			ArrayList<ArrayList<String>> value = ee.getValue();
 			if(targetMap.get(key) != null) {
+				System.out.println("masuk sebelah sini ");
 				if(isContain(targetMap.get(key), value.get(0))) {
-					doubleScore = doubleScore++;
+					doubleScore = doubleScore + 1.00;
+					System.out.println("double score ialah X "+doubleScore);
 				}else {
 					doubleScore = doubleScore + 0.50;
-				  }
+					System.out.println("double score ialah Y "+doubleScore);
 				}
 			}
+		}
 		return doubleScore;
 	}
 	
