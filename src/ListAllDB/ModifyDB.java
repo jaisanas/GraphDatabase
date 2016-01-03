@@ -20,20 +20,24 @@ import javax.swing.JMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 
 public class ModifyDB extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
+	private final Action action = new SwingAction();
 	
-
+	public static ModifyDB dialog = new ModifyDB("");
+	private final Action action_1 = new SwingAction_1();
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			ModifyDB dialog = new ModifyDB("");
+			
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -263,10 +267,12 @@ public class ModifyDB extends JDialog {
 					 }
 				 }
 			 }else if(partCommands.length == 8) {
+				 //select graph similar to [nama_graph] by [distance] distance
 				 ListAllDB.initIndex();
 				 System.out.println(" select query ");
 				 GraphIndex.selectGraph(partCommands[4], partCommands[6]);
 			 }else if(partCommands.length == 9) {
+				 //select graph similar to temp_graph threshold [n_thold] mode [mode_searching]
 				 try{
 					 ListAllDB.initIndex();
 					 System.out.println("select by tree index ");
@@ -399,16 +405,34 @@ public class ModifyDB extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						textField.setText("");
+					}
+				});
+				cancelButton.setAction(action_1);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
+		}
+	}
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "Close");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			dialog.setVisible(false);
+			System.out.println("test");
+		}
+	}
+	private class SwingAction_1 extends AbstractAction {
+		public SwingAction_1() {
+			putValue(NAME, "Cancel");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
 		}
 	}
 }

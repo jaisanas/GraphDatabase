@@ -104,10 +104,15 @@ public class EditorMenuBar extends JMenuBar
 		menu.addSeparator();
 
 		menu.add(editor.bind(mxResources.get("pageSetup"), new PageSetupAction(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
-		if (StartPage.ModeSearching.equals("s2")) menu.add(editor.bind(mxResources.get("pageSetup"), new EditorActions.SaveActionQueryBTree(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
-		menu.add(editor.bind(mxResources.get("pageSetup la"), new EditorActions.SaveActionQueryBTree(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
+		if(StartPage.ModeSearching != null) {
+			if (StartPage.ModeSearching.equals("s2")) menu.add(editor.bind(mxResources.get("pageSetup la/by modification"), new EditorActions.SaveActionQueryBTree(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
+			if (StartPage.ModeSearching.equals("s1")) menu.add(editor.bind(mxResources.get("print la/default searching"), new EditorActions.SaveActionQuery(), "/com/mxgraph/examples/swing/images/print.gif"));
+		}else {
+			System.out.println("do nothing");
+		}
+		//menu.add(editor.bind(mxResources.get("pageSetup la"), new EditorActions.SaveActionQueryBTree(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
 		menu.add(editor.bind(mxResources.get("print"), new PrintAction(), "/com/mxgraph/examples/swing/images/print.gif"));
-		if (StartPage.ModeSearching.equals("s1")) menu.add(editor.bind(mxResources.get("print la"), new EditorActions.SaveActionQuery(), "/com/mxgraph/examples/swing/images/print.gif"));
+		
 		menu.addSeparator();
 
 		menu.add(editor.bind(mxResources.get("exit"), new ExitAction()));

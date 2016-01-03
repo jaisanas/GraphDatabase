@@ -24,7 +24,7 @@ import javax.swing.event.ListSelectionListener;
 public class ShowAllGraph extends JPanel {
 
  
-
+ public static JFrame frame = new JFrame("List All Graph");
   JList list;
 
   public ShowAllGraph() {
@@ -85,6 +85,7 @@ public class ShowAllGraph extends JPanel {
 		String graphPath = dirPath+"\\"+StartPage.activeDB+"\\"+element+".mxe";
 			StartPage.gFilePath = graphPath;
 			GraphEditor.initGraphEditor(StartPage.gFilePath);
+			frame.setVisible(false);
     	}catch(Exception ex) {
     		ex.printStackTrace();
     	}
@@ -94,7 +95,6 @@ public class ShowAllGraph extends JPanel {
   }
   
   public static void initListAllGraph() {
-	  	JFrame frame = new JFrame("List All Graph");
 	  	frame.setSize(260, 200);
 	    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    frame.setContentPane(new ShowAllGraph());

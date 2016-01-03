@@ -27,13 +27,13 @@ import ListAllDB.GraphIndex.ValueGraphIndex;
 
 public class ListAllDB extends JPanel {
 
- 
+public static JFrame frame = new JFrame("List All Databases");
 
   JList list;
 
   public ListAllDB() {
     setLayout(new BorderLayout());
-
+    
     list = new JList(StartPage.dbList.toArray());
     JButton button = new JButton("execute");
     JScrollPane pane = new JScrollPane(list);
@@ -287,7 +287,7 @@ public class ListAllDB extends JPanel {
 			
 			StartPage.graphTreeListIndex.Print(StartPage.graphTreeIndex);
 		 }
-			
+		 frame.setVisible(false);
     	}catch(Exception ex) {
     		ex.printStackTrace();
     	}
@@ -486,7 +486,7 @@ public class ListAllDB extends JPanel {
 				brList.close();
 				StartPage.graphTreeListIndex.Print(StartPage.graphTreeIndex);
 			 }
-				
+			 
 	    	}catch(Exception ex) {
 	    		ex.printStackTrace();
 	    	}
@@ -494,7 +494,6 @@ public class ListAllDB extends JPanel {
   }
   
   public static void initListAllDB() {
-	  	JFrame frame = new JFrame("List All Databases");
 	  	frame.setSize(260, 200);
 	    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    frame.setContentPane(new ListAllDB());
