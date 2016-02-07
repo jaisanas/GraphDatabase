@@ -514,7 +514,6 @@ public class GraphTreeListIndex {
 		}else {
 			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
 				String key = ee.getKey();
-				
 				if(queryMap.get(key)==null) {
 					scoreDistance++;
 				}else {
@@ -529,25 +528,6068 @@ public class GraphTreeListIndex {
 		return scoreDistance;
 	}
 	
+	
+	//=======================================================Versi V1.0=====================================================//
+	//1. euclidean distance
+	public Double euclideanDistance(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+	
+		int value = (inputV[0]-targetV[0] )*(inputV[0]-targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			value = value + (inputV[i] - targetV[i])*(inputV[i] - targetV[i]);
+		}
+		System.out.println("nilai dari value adalah "+value);
+		distance = Math.sqrt(value);
+		return distance;
+	}
+	
+	//2. city block
+	public Double cityBlock(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+	
+		int value = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			value = value + Math.abs(inputV[i] - targetV[i]);
+		}
+		//System.out.println("nilai dari value adalah "+value);
+		distance = (double) value;
+		return distance;
+	}
+	//4. chebyshev
+	public Double chebyshev(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+	
+		int value = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			if (value < Math.abs(inputV[i] - targetV[i])){
+				value = Math.abs(inputV[i] - targetV[i]);
+			}
+		}
+		//System.out.println("nilai dari value adalah "+value);
+		distance = (double) value;
+		return distance;
+	}
+	
+	//5. sorensen
+	public Double sorensen(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		int pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] + targetV[i]);
+		}
+		
+		int penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = (double) pembilang/penyebut;
+		return distance;
+	}
+	
+	//6. gower
+	public Double gower(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		int pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] + targetV[i]);
+		}
+		
+		int penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = (double) pembilang/tempSize;
+		return distance;
+	}
+	
+	//7. soergel
+	public Double soergel(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		int pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] + targetV[i]);
+		}
+		
+		int penyebut = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i],targetV[i]);
+		}
+		distance = (double) pembilang/penyebut;
+		return distance;
+	}
+	
+	//8. kulczynki d
+	public Double kulczynki_d(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		int pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] + targetV[i]);
+		}
+		
+		int penyebut = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.min(inputV[i],targetV[i]);
+		}
+		distance = (double) pembilang/penyebut;
+		return distance;
+	}
+	
+	//9. canberra
+	public Double canberra(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = ((Math.abs(inputV[0] - targetV[0]))/(inputV[0] + targetV[0]));
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + ((Math.abs(inputV[0] - targetV[0]))/(inputV[0] + targetV[0]));
+		}
+		
+		int penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = (double) pembilang;
+		return distance;
+	}
+	
+	//10. lorentzian
+	public Double lorentzian(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = Math.log(1 + Math.abs(inputV[0] - targetV[0]));
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.log(1 + Math.abs(inputV[0] - targetV[0]));
+		}
+		
+		int penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = (double) pembilang;
+		return distance;
+	}
+	
+	//11. intersection
+	public Double intersection(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.min(inputV[i],targetV[i]);
+		}
+		
+		int penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = (double) pembilang;
+		return distance;
+	}
+	
+	//12. wave hedges
+	public Double waveHedges(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = (Math.abs(inputV[0] - targetV[0]) / Math.max(inputV[0], targetV[0]));
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + (Math.abs(inputV[i] - targetV[i]) / Math.max(inputV[i], targetV[i]));
+		}
+		
+		int penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = (double) pembilang;
+		return distance;
+	}
+	
+	//13. czekanowski = sorensen
+	
+	//14. motyka
+	public Double motyka(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang +  Math.max(inputV[i], targetV[i]);
+		}
+		
+		int penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = (double) pembilang/penyebut;
+		return distance;
+	}
+	
+	//15. kulczynki_s
+	public Double kulczynki_s(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.min(inputV[i], targetV[i]);
+		}
+		
+		int penyebut = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.abs(inputV[i] - targetV[i]);
+		}
+		distance = (double) pembilang/penyebut;
+		return distance;
+	}
+	
+	//16. ruzicka
+	public Double ruzicka(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		double pembilang = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.min(inputV[i], targetV[i]);
+		}
+		
+		int penyebut = Math.max(inputV[0],targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i],targetV[i]);
+		}
+		distance = (double) pembilang/penyebut;
+		return distance;
+	}
+	
+	//17. tanimoto
+	public Double tanimoto(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = Math.max(inputV[0], targetV[0]) - Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + (Math.max(inputV[i], targetV[i]) - Math.min(inputV[i], targetV[i]));
+		}
+		
+		int penyebut = Math.max(inputV[0],targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i],targetV[i]);
+		}
+		distance = (double) pembilang/penyebut;
+		return distance;
+	}
+	
+	//18. inner product
+	public Double innerProduct(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = inputV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + (inputV[i]*targetV[i]);
+		}
+		
+		int penyebut = Math.max(inputV[0],targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i],targetV[i]);
+		}
+		distance = (double) pembilang;
+		return distance;
+	}
+	
+	//20. cosine
+	public Double cosine(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = (double) inputV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p1 = p1 + (inputV[i] * targetV[i]);
+		}
+		
+		double p2 = (double) inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] * inputV[i]);
+		}
+		
+		double p3 = (double) targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		distance = (double) p1/(p2*p3);
+		return distance;
+	}
+	
+	//21. kumar hassebrook
+	public Double kumarHassebrook(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = (double) inputV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p1 = p1 + (inputV[i] * targetV[i]);
+		}
+		
+		double p2 = (double) inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] * inputV[i]);
+		}
+		
+		double p3 = (double) targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		distance = (double) p1/(p2+p3-p1);
+		return distance;
+	}
+	
+	//22. jaccard
+	public Double jaccard(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double pembilang = (double) (inputV[0] - targetV[0])*(inputV[0] - targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			pembilang = pembilang + ((inputV[i] - targetV[i]) *(inputV[i] - targetV[i]));
+		}
+		
+		double p1 = (double) inputV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p1 = p1 + (inputV[i] * targetV[i]);
+		}
+		
+		double p2 = (double) inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] * inputV[i]);
+		}
+		
+		double p3 = (double) targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		distance = (double) pembilang/(p2+p3-p1);
+		return distance;
+	}
+	
+	//23. dice
+	public Double dice(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double pembilang = (double) (inputV[0] - targetV[0])*(inputV[0] - targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			pembilang = pembilang + ((inputV[i] - targetV[i]) *(inputV[i] - targetV[i]));
+		}
+		
+		double p1 = (double) inputV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p1 = p1 + (inputV[i] * targetV[i]);
+		}
+		
+		double p2 = (double) inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] * inputV[i]);
+		}
+		
+		double p3 = (double) targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		distance = (double) pembilang/(p2+p3);
+		return distance;
+	}
+	
+	//24. fidelity
+	public Double fidelity(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1 ; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i]*targetV[i]);
+		}
+		distance = (double) p1;
+		return distance;
+	}
+	
+	//25. bhattacharyya
+	public Double bhattacharyya(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1 ; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i]*targetV[i]);
+		}
+		distance = (double) -1 * Math.log(p1);
+		return distance;
+	}
+	
+	//26. Hellinger
+	public Double hellinger(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1 ; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i]*targetV[i]);
+		}
+		distance = (double) 2*Math.sqrt(1 - p1);
+		return distance;
+	}
+	
+	//27. matusita
+	public Double matusita(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1 ; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i]*targetV[i]);
+		}
+		distance = (double) Math.sqrt(2 - 2*p1);
+		return distance;
+	}
+	
+	//28. squared chord
+	public Double squaredChord(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1 ; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i]*targetV[i]);
+		}
+		distance = (double) 2*p1 - 1;
+		return distance;
+	}
+	
+	//29. squared Euclidean
+	public Double squaredEuclidean(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = (inputV[0] -targetV[0])*(inputV[0] - targetV[0]);
+		for(int i =1 ; i < tempSize; i++) {
+			p1 = p1 + ((inputV[i]-targetV[i])*(inputV[i]-targetV[i]));
+		}
+		distance = (double) p1;
+		return distance;
+	}
+	
+	//45. avg
+	public Double avg(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+				targetV[i] = 0;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+				inputV[i] = 0;
+			}
+		}
+		
+		double p1 = Math.abs(inputV[0] - targetV[0]);
+		for(int i =1 ; i < tempSize; i++) {
+			p1 = p1 + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double p2 = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			if(p1 < Math.abs(inputV[i] -targetV[i] )) {
+				p2 = Math.abs(inputV[i] - targetV[i]);
+			}
+		}
+		distance = (double) (p1 + p2)/2;
+		return distance;
+	}
+
+	//=======================================================Versi V1.1=====================================================//
+	//euclidean distance
+	public Double euclideanDistanceV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		int value =( inputV[0] - targetV[0] )*(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			value = value + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
+		}
+		distance = Math.sqrt(value);
+		return distance;
+	}
+	
+	//2. city block
+	public Double cityBlockV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		int value = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			value = value + Math.abs(inputV[i] - targetV[i]);
+		}
+		distance = (double) value;
+		return distance;
+	}
+	
+	//4. chebyshev
+	public Double chebyshevV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		int value =Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			if(value < Math.abs(inputV[i] - targetV[i])) {
+				value = Math.abs(inputV[i] -targetV[i]);
+			}
+		}
+		distance =(double) value;
+		return distance;
+	}
+	
+	//5. sorensen
+	public Double sorensenV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//6. gower
+	public Double gowerV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/tempSize;
+		return distance;
+	}
+	
+	//7. soergel
+	public Double soergelV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut +Math.max(inputV[i], targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//8. kulczynki d
+	public Double kulczynki_dV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.min(inputV[i], targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//10. lorentzian
+	public Double lorentzianV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double value = Math.log(1 + Math.abs(inputV[0] - targetV[0]));
+		for(int i = 1; i < tempSize; i++) {
+			value = value + Math.log(1 + Math.abs(inputV[i] + targetV[i]));
+		}
+		distance = value;
+		return distance;
+	}
+	
+	//11. intersection
+	public Double intersectionV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/2;
+		return distance;
+	}
+	
+	//13. czekanowski = sorensen
+	
+	//14. motyka
+	public Double motykaV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang =Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.max(inputV[i], targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//15. kulczynki_s
+	public Double kulczynki_sV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.min(inputV[i],targetV[i]);
+		}
+		
+		double penyebut = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.abs(inputV[i] - targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//16. ruzicka
+	public Double ruzickaV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.min(inputV[0],targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.min(inputV[i] , targetV[i]);
+		}
+		
+		double penyebut = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i] , targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//17. tanimoto
+	public Double tanimotoV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = Math.max(inputV[0],targetV[0])-Math.min(inputV[0],targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + (Math.max(inputV[i], targetV[i])-Math.min(inputV[i] , targetV[i]));
+		}
+		
+		double penyebut = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i] , targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//18. inner product
+	public Double innerProductV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double pembilang = inputV[0] *targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + (inputV[i]*targetV[i]);
+		}
+		
+		distance = pembilang;
+		return distance;
+	}
+	
+	//20. cosine
+	public Double cosineV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double p1 = inputV[0]*targetV[0];
+		for(int i =0; i < tempSize; i++) {
+			p1 = p1 + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		
+		distance = p1/(Math.sqrt(p2)*Math.sqrt(p3));
+		return distance;
+	}
+	
+	//21. kumar hassebrook
+	public Double kumarHassebrookV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+	
+		double p1 = inputV[0]*targetV[0];
+		for(int i =0; i < tempSize; i++) {
+			p1 = p1 + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		
+		distance = p1/(p2 + p3 - p1);
+		return distance;
+	}
+	
+	//22. jaccard
+	public Double jaccardV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double pembilang = (inputV[0] -targetV[0])*(inputV[0] -targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
+		}
+		
+		double p1 = inputV[0]*targetV[0];
+		for(int i =0; i < tempSize; i++) {
+			p1 = p1 + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		
+		distance = pembilang/(p2 + p3 - p1);
+		return distance;
+	}
+	
+	//23. dice
+	public Double diceV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double pembilang = (inputV[0] -targetV[0])*(inputV[0] -targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
+		}
+		
+		double p1 = inputV[0]*targetV[0];
+		for(int i =0; i < tempSize; i++) {
+			p1 = p1 + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i =1; i < tempSize; i++) {
+			p2 = p2 + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p3 = p3 + (targetV[i]*targetV[i]);
+		}
+		
+		distance = pembilang/(p2 + p3 );
+		return distance;
+	}
+	
+	//24. fidelity
+	public Double fidelityV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		
+		distance = p1;
+		return distance;
+	}
+	
+	//25. bhattacharyya
+	public Double bhattacharyyaV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		
+		distance = -1*Math.log(p1);
+		return distance;
+	}
+	
+	//26. hellinger
+	public Double hellingerV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		
+		distance = Math.sqrt(1-p1);
+		return distance;
+	}
+	
+	//27. matusita
+	public Double matusitaV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		
+		distance = Math.sqrt(2 - 2*p1);
+		return distance;
+	}
+	
+	//28. squared-chord
+	public Double squaredChordV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double p1 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			p1 = p1 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		
+		distance = 2*p1 -1;
+		return distance;
+	}
+	
+	//29. squared euclidean
+	public Double squaredEuclideanV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double p1 = (inputV[0] -targetV[0])*(inputV[0] -targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			p1 = p1 + ((inputV[i] - targetV[i]) * (inputV[i] -targetV[i]));
+		}
+		
+		distance = p1;
+		return distance;
+	}
+	
+	//45. avg
+	public Double avgV11(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+		
+		// isi array input maupun target
+		int [] inputV = new int[tempSize];
+		int [] targetV = new int[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			inputV[i] = 0;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			inputV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+			targetV[i] = 1;
+		}
+		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+			targetV[i] = 0;
+		}
+		for(int i = 0; i < inputV.length; i++) {
+			System.out.println(inputV[i]);
+		}
+		
+		for(int i = 0; i < targetV.length; i++) {
+			System.out.println(targetV[i]);
+		}
+		
+		double p1 = Math.abs(inputV[0]-targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			p1 = p1 + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double p2 = Math.abs(inputV[0] -targetV[0]);
+		for(int i =1; i < tempSize; i++) {
+			if(p2 < Math.abs(inputV[i] -targetV[i])) {
+				p2 = Math.abs(inputV[i] - targetV[i]);
+			}
+		}
+		distance = p1;
+		return distance;
+	}
+	
+	//=======================================================Versi V2.0=====================================================//
+	//1. euclidean
+	public Double euclideanDistanceV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double value = (inputV[0] - targetV[0] )*(inputV[0]-targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			value = value + (inputV[i] - targetV[i])*(inputV[i] - targetV[i]);
+		}
+		System.out.println("nilai dari value adalah "+value);
+		distance = Math.sqrt(value);
+		return distance;
+	}
+	
+	//2. city block
+	public Double cityblockV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double value = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			value = value + Math.abs(inputV[i] - targetV[i]);
+		}
+		distance = value;
+		return distance;
+	}
+	
+	//4. chebyshev
+	public Double chebyshevV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double value = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			if(value < Math.abs(inputV[i] -targetV[i])) {
+				value = Math.abs(inputV[i] -targetV[i]);
+			}
+		}
+		System.out.println("nilai dari value adalah "+value);
+		distance = Math.sqrt(value);
+		return distance;
+	}
+	
+	//5. sorensen
+	public Double sorensenV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//6. gower
+	public Double gowerV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/tempSize;
+		return distance;
+	}
+	
+	//7. soergel
+	public Double soergelV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i], targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//8. kulczynki_d
+	public Double kulczynki_dV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.min(inputV[i], targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//10. lorentzian
+	public Double lorentzianV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang =Math.log(1 + Math.abs(inputV[0] - targetV[0]));
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.log(1 + Math.abs(inputV[i] - targetV[i]));
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//11. intersection
+	public Double intersectionV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/2;
+		return distance;
+	}
+	
+	//13. czekanowski = sorensen
+	
+	//14. motyka
+	public Double motykaV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.max(inputV[0],targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.max(inputV[i],targetV[i]);
+		}
+		
+		double penyebut = inputV[0] + targetV[0];
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + (inputV[i] + targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//15. kulczynki s
+	public Double kulczynki_sV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.min(inputV[i], targetV[i]);
+		}
+		
+		double penyebut = Math.abs(inputV[0] - targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.abs(inputV[i] - targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//16. ruzicka
+	public Double ruzickaV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = Math.min(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang + Math.min(inputV[i], targetV[i]);
+		}
+		
+		double penyebut = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i], targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//17. tanimoto
+	public Double tanimotoV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = (Math.max(inputV[0], targetV[0]) - Math.min(inputV[0], targetV[0]));
+		for(int i = 1; i < tempSize; i++) {
+			pembilang = pembilang +( Math.max(inputV[i], targetV[i])-Math.min(inputV[i], targetV[i]));
+		}
+		
+		double penyebut = Math.max(inputV[0], targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			penyebut = penyebut + Math.max(inputV[i], targetV[i]);
+		}
+		distance = pembilang/penyebut;
+		return distance;
+	}
+	
+	//18. inner product
+	public Double innerProductV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = inputV[0]*targetV[0];
+		for(int i =1; i < tempSize; i++) {
+			pembilang = pembilang + (inputV[i]*targetV[i]);
+		}
+		distance = pembilang;
+		return distance;
+	}
+	
+	//20. cosine
+	public Double cosineV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = inputV[0]*targetV[0];
+		for(int i =1; i < tempSize; i++) {
+			pembilang = pembilang + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p2 = p2  + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i =1; i <tempSize; i++) {
+			p3 = p3 + (targetV[i] *targetV[i]);
+		}
+		distance = pembilang/(Math.sqrt(p2)*Math.sqrt(p3));
+		return distance;
+	}
+	
+	//21. kumar hassebrook
+	public Double kumarHassebrookV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+	
+		double pembilang = inputV[0]*targetV[0];
+		for(int i =1; i < tempSize; i++) {
+			pembilang = pembilang + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p2 = p2  + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i =1; i <tempSize; i++) {
+			p3 = p3 + (targetV[i] *targetV[i]);
+		}
+		distance = pembilang/(p2 + p3 - pembilang);
+		return distance;
+	}
+	
+	//22. jaccard
+	public Double jaccardV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double p0 = (inputV[0] - targetV[0])*(inputV[0] -targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			p0 = p0 + ((inputV[i]-targetV[i]) * (inputV[i] - targetV[i]));
+		}
+	
+		double p1 = inputV[0]*targetV[0];
+		for(int i =1; i < tempSize; i++) {
+			p1 =p1 + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p2 = p2  + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i =1; i <tempSize; i++) {
+			p3 = p3 + (targetV[i] *targetV[i]);
+		}
+		distance = p0/(p2 + p3 -p1 );
+		return distance;
+	}
+	
+	//23. dice
+	public Double diceV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double p0 = (inputV[0] - targetV[0])*(inputV[0] -targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			p0 = p0 + ((inputV[i]-targetV[i]) * (inputV[i] - targetV[i]));
+		}
+	
+		double p1 = inputV[0]*targetV[0];
+		for(int i =1; i < tempSize; i++) {
+			p1 =p1 + (inputV[i]*targetV[i]);
+		}
+		
+		double p2 = inputV[0]*inputV[0];
+		for(int i = 1; i < tempSize; i++) {
+			p2 = p2  + (inputV[i] *inputV[i]);
+		}
+		
+		double p3 = targetV[0]*targetV[0];
+		for(int i =1; i <tempSize; i++) {
+			p3 = p3 + (targetV[i] *targetV[i]);
+		}
+		distance = p0/(p2 + p3);
+		return distance;
+	}
+	
+	//24.fidelity
+	public Double fidelityV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double p0 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			p0 = p0 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		distance = p0;
+		return distance;
+	}
+	
+	//25. bhattacharyya
+	public Double bhattacharyyaV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double p0 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			p0 = p0 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		distance = -1 * Math.log(p0);
+		return distance;
+	}
+	
+	//26. hellinger
+	public Double hellingerV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double p0 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			p0 = p0 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		distance = 2 * Math.sqrt(1 - p0);
+		return distance;
+	}
+	
+	//27. matusita
+	public Double matusitaV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double p0 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			p0 = p0 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		distance = Math.sqrt(2 - 2*p0);
+		return distance;
+	}
+	
+	//28. squared chord
+	public Double squaredChordV20(GraphData query,GraphData target){
+		int fullEquals = 0;
+		int halfEquals = 0;
+		int fullNotEquals = 0;
+		int tempSize;
+		Double distance = 0.00;
+		HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+		HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+		if(queryMap.size() >= targetMap.size()) {
+			tempSize = queryMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+				String key = ee.getKey();
+				ArrayList<ArrayList<String>> value = ee.getValue();
+				if(targetMap.get(key)== null) {
+					fullNotEquals++;
+				}else {
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					}
+				}
+			}
+		}else {
+			tempSize = targetMap.size();
+			for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+				String key = ee.getKey();
+				if(queryMap.get(key)==null) {
+					fullNotEquals++;
+				}else {
+					ArrayList<ArrayList<String>> value = queryMap.get(key);
+					if(!isContain(targetMap.get(key), value.get(0))) {
+						halfEquals++;
+					}else {
+						fullEquals++;
+					} 
+				}
+			}
+		}
+		
+		// isi array input maupun target
+		double [] inputV = new double[tempSize];
+		double [] targetV = new double[tempSize];
+		for(int i = 0; i < fullEquals; i++) {
+			inputV[i] = 1;
+			targetV[i] = 1;
+		}
+		
+		for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+			inputV[i] = 0.5;
+			targetV[i] = 0.5;
+		}
+		if(queryMap.size() >= targetMap.size()) {
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+		}else{
+			for(int i = (fullEquals + halfEquals); i < tempSize; i++) {
+				targetV[i] = 1;
+			}
+		}
+		
+		double p0 = Math.sqrt(inputV[0]*targetV[0]);
+		for(int i = 1; i < tempSize; i++) {
+			p0 = p0 + Math.sqrt(inputV[i] * targetV[i]);
+		}
+		distance = 2*p0 - 1;
+		return distance;
+	}
+	
+	
+	
+	//=======================================================Versi V2.1=====================================================//
+		public Double euclideanDistanceV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double value =(inputV[0] - targetV[0] )*(inputV[0] - targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				value = value + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
+			}
+			distance = Math.sqrt(value);
+			return distance;
+		}
 	public HashMap<String,Double> searchByModification(GraphData query, Double thold) {
 		HashMap<String,Double> finaList = new HashMap<>();
 		//cari candidate anak
 		ArrayList<String> childList = StartPage.graphTreeIndex.getIndexTree().get("root_0");
 		ArrayList<String> temp = new ArrayList<>();
 		temp.add(childList.get(0));
-		int j = 0;
-		for(int i = 0; i < childList.size(); i++) {
-			if(i != j) {
-				if(cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) == cariScoreModification(query, this.gTreeIndex.get(temp.get(j)))) {
+		for(int i = 1; i < childList.size(); i++) {
+				if(cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) == cariScoreModification(query, this.gTreeIndex.get(temp.get(0)))) {
 					temp.add(childList.get(i));
-					j++;
-				} else if (cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) > cariScoreModification(query, this.gTreeIndex.get(temp.get(j)))) {
+				} else if (cariScoreModification(query, this.gTreeIndex.get(childList.get(i))) > cariScoreModification(query, this.gTreeIndex.get(temp.get(0)))) {
 					temp = null;
 					temp = new ArrayList<>();
-					j = 0;
 					temp.add(childList.get(i));
 				}
-			}
 		}
 		System.out.println("ukuran temp ialah "+temp.size());
 		System.out.println("tempnya ialah "+temp.get(0));
@@ -563,17 +6605,19 @@ public class GraphTreeListIndex {
 				for(int k = 0; k < tempX.size(); k++) {
 					GraphData targetX = this.gTreeIndex.get(tempX.get(k));
 					System.out.println(tempX.get(k)+" ukurannya "+cariScore(query, targetX));
-					if(cariScore(query, targetX) <= thold) {
-						finaList.put(tempX.get(k), cariScore(query, targetX));
-					}
+					//if(cariScore(query, targetX) <= thold) {
+						finaList.put(tempX.get(k), euclideanDistanceV21(query, targetX));
+					//}
 				}
 			}
 		}else {
 			finaList = null;
 		}
-		
+		System.out.println("ukuran finalist "+finaList.size());
 		return finaList;
 	}
+	
+	
 	
 	public boolean isNeverhappened(GraphData query, GraphData target) {
 		boolean flag = false;

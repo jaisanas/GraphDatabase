@@ -54,6 +54,7 @@ public class StartPage extends JFrame {
 	public static Double tHold;
 	public static String ModeSearching;
 	public static String ModeSimilarity;
+	public static HashMap<String,Double> result;
 	/**
 	 * Launch the application.
 	 */

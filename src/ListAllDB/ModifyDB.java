@@ -266,11 +266,15 @@ public class ModifyDB extends JDialog {
 						 }
 					 }
 				 }
-			 }else if(partCommands.length == 8) {
-				 //select graph similar to [nama_graph] by [distance] distance
+			 }else if(partCommands.length == 14) {
+				 //select graph similar to [nama_graph] by [distance_function] distance using model [vektor_space_model] with threshold [thold_magnitude]
 				 ListAllDB.initIndex();
 				 System.out.println(" select query ");
-				 GraphIndex.selectGraph(partCommands[4], partCommands[6]);
+				 //partCommands[4] [nama_graph]
+				 //partCommands[6] [distance]
+				 //partCommands[10] [vektor_space_model]
+				 //partCommands[14] [thold_magnitude]
+				 GraphIndex.selectGraph(partCommands[4], partCommands[6], partCommands[10], partCommands[13]);
 			 }else if(partCommands.length == 9) {
 				 //select graph similar to temp_graph threshold [n_thold] mode [mode_searching]
 				 try{

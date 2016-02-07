@@ -56,6 +56,7 @@ import ListAllDB.GraphData;
 import ListAllDB.GraphIndex;
 import ListAllDB.GraphTreeIndex;
 import ListAllDB.GraphTreeListIndex;
+import ListAllDB.QueryResults;
 import ListAllDB.GraphIndex.ValueGraphIndex;
 import ListAllDB.StartPage;
 import ListAllDB.GraphIndex.KeyGraphIndex;
@@ -551,7 +552,52 @@ public class EditorActions
 		/**
 		 * Saves XML+PNG format.
 		 */
-		
+		protected void saveXmlPng(BasicGraphEditor editor, String filename,
+				Color bg) throws IOException
+		{
+			mxGraphComponent graphComponent = editor.getGraphComponent();
+			mxGraph graph = graphComponent.getGraph();
+			
+			// Creates the image for the PNG file
+			BufferedImage image = mxCellRenderer.createBufferedImage(graph,
+					null, 1, bg, graphComponent.isAntiAlias(), null,
+					graphComponent.getCanvas());
+
+			// Creates the URL-encoded XML data
+			mxCodec codec = new mxCodec();
+			String xml = URLEncoder.encode(
+					mxXmlUtils.getXml(codec.encode(graph.getModel())), "UTF-8");
+			mxPngEncodeParam param = mxPngEncodeParam
+					.getDefaultEncodeParam(image);
+			param.setCompressedText(new String[] { "mxGraphModel", xml });
+
+			// Saves as a PNG file
+			FileOutputStream outputStream = new FileOutputStream(new File(
+					filename));
+			try
+			{
+				mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream,
+						param);
+
+				if (image != null)
+				{
+					encoder.encode(image);
+					System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx "+"masuk sini");
+					System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb "+"bg");
+					editor.setModified(false);
+					//editor.setCurrentFile(new File(filename));
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(graphComponent,
+							mxResources.get("noImageData"));
+				}
+			}
+			finally
+			{
+				outputStream.close();
+			}
+		}
 
 		/**
 		 * 
@@ -731,6 +777,14 @@ public class EditorActions
 						String filePathTreeList = StartPage.dbPath+"\\"+"jaisGraphTreeListIndex.text";
 						StartPage.graphTreeListIndex.writeToFile(filePathTree, filePathTreeList);
 						System.out.println("save as mxe");
+						
+						System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff "+filename);
+						
+						//save as PNG
+						Color bg = null;
+						String filenamePNG = filename+".png";
+						saveXmlPng(editor, filenamePNG, Color.white);
+						
 						mxCodec codec = new mxCodec();
 						String xml = mxXmlUtils.getXml(codec.encode(graph
 								.getModel()));
@@ -764,7 +818,8 @@ public class EditorActions
 								|| (editor.getCurrentFile() != null
 										&& ext.equalsIgnoreCase("png") && !dialogShown))
 						{
-							//saveXmlPng(editor, filename, bg);
+							
+							saveXmlPng(editor, filename, bg);
 						}
 						else
 						{
@@ -1243,6 +1298,10 @@ public class EditorActions
 						GraphData query = new GraphData(dt, file);
 						//StartPage.graphTreeIndex = StartPage.graphTreeListIndex.union(file, dtX, StartPage.graphTreeIndex);
 						HashMap<String,Double> hmm = StartPage.graphTreeListIndex.searchByModification(query, StartPage.tHold);
+						StartPage.result = null;
+						StartPage.result = new HashMap<>();
+						StartPage.result = hmm;
+						QueryResults.showQueryResults();
 						StartPage.graphTreeListIndex.PrintResult(hmm);
 						System.out.println("save as mxe");
 						mxCodec codec = new mxCodec();
@@ -1364,7 +1423,8 @@ public class EditorActions
 				if (image != null)
 				{
 					encoder.encode(image);
-
+					System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx "+"masuk sini");
+					System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb "+"bg");
 					editor.setModified(false);
 					editor.setCurrentFile(new File(filename));
 				}
