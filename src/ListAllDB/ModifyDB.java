@@ -275,7 +275,7 @@ public class ModifyDB extends JDialog {
 				 //partCommands[10] [vektor_space_model]
 				 //partCommands[14] [thold_magnitude]
 				 GraphIndex.selectGraph(partCommands[4], partCommands[6], partCommands[10], partCommands[13]);
-			 }else if(partCommands.length == 9) {
+			 }else if(partCommands.length == 16) {
 				 //select graph similar to temp_graph threshold [n_thold] mode [mode_searching]
 				 try{
 					 ListAllDB.initIndex();
@@ -291,8 +291,10 @@ public class ModifyDB extends JDialog {
 					 bw1.write("<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/></root></mxGraphModel>");
 					 bw1.close();
 					 JOptionPane.showMessageDialog(null,"Succeed to create graph temp.mxe <br> for next searching similarity");
-					 StartPage.tHold = Double.parseDouble(partCommands[6]);
-					 StartPage.ModeSearching = partCommands[8];
+					 StartPage.tHold = Double.parseDouble(partCommands[13]);
+					 StartPage.ModeSearching = partCommands[15];
+					 StartPage.vectorSpaceModel = partCommands[10];
+					 StartPage.ModeSimilarity = partCommands[6];
 					 GraphEditor.initGraphEditor(filePathGraph);
 					 textField.setText("");
 				 }catch(Exception ex) {

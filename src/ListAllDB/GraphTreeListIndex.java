@@ -529,6 +529,31 @@ public class GraphTreeListIndex {
 	}
 	
 	
+	public static Double normalize(Double currValue, Double MaxValue, Double MinValue) {
+		Double normal = (Double) (currValue - MinValue)/(MaxValue - MinValue);
+		return normal;
+	}
+	
+	public void printArray(double [] arr){
+		System.out.print("[");
+		for(int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i]);
+			if(i < arr.length -1) {System.out.print(","); }
+		}
+		System.out.print("]");
+		System.out.println();
+	} 
+	
+	public void printArray(int [] arr) {
+		System.out.print("[");
+		for(int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i]);
+			if(i < arr.length -1) {System.out.print(","); }
+		}
+		System.out.print("]");
+	}
+	
+	
 	//=======================================================Versi V1.0=====================================================//
 	//1. euclidean distance
 	public Double euclideanDistance(GraphData query,GraphData target){
@@ -599,9 +624,20 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			value = value + (inputV[i] - targetV[i])*(inputV[i] - targetV[i]);
 		}
+		
+		Double MinValue = 0.0;
+		Double MaxValue = (double) Math.max(inputV[0], targetV[0]);
+		
+		for(int i = 1; i < inputV.length; i++) {
+			MaxValue = MaxValue + Math.max(inputV[i], targetV[i]);
+		}
+		
+		double finalMaxValue = Math.sqrt(MaxValue);
+		
 		System.out.println("nilai dari value adalah "+value);
 		distance = Math.sqrt(value);
-		return distance;
+		double finalDistance = normalize(distance, finalMaxValue, MinValue);
+		return finalDistance;
 	}
 	
 	//2. city block
@@ -668,13 +704,20 @@ public class GraphTreeListIndex {
 				inputV[i] = 0;
 			}
 		}
-	
+		
+		printArray(inputV);
+		printArray(targetV);
+		
 		int value = Math.abs(inputV[0] - targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			value = value + Math.abs(inputV[i] - targetV[i]);
 		}
 		//System.out.println("nilai dari value adalah "+value);
-		distance = (double) value;
+		
+		double MinValue = 0.0;
+		double MaxValue = tempSize;
+		
+		distance = (double) normalize((double) value, MaxValue, MinValue);
 		return distance;
 	}
 	//4. chebyshev
@@ -741,15 +784,21 @@ public class GraphTreeListIndex {
 				inputV[i] = 0;
 			}
 		}
-	
+		
+		printArray(inputV);
+		printArray(targetV);
+		
 		int value = Math.abs(inputV[0] - targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			if (value < Math.abs(inputV[i] - targetV[i])){
 				value = Math.abs(inputV[i] - targetV[i]);
 			}
 		}
+		
+		double MinValue = 0.0;
+		double MaxValue = 1.0;
 		//System.out.println("nilai dari value adalah "+value);
-		distance = (double) value;
+		distance = (double) normalize((double) value, MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -818,12 +867,12 @@ public class GraphTreeListIndex {
 			}
 		}
 		
-		int pembilang = Math.abs(inputV[0] - targetV[0]);
+		double pembilang =(double) Math.abs(inputV[0] - targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			pembilang = pembilang + Math.abs(inputV[i] + targetV[i]);
 		}
 		
-		int penyebut = inputV[0] + targetV[0];
+		double penyebut = (double) inputV[0] + targetV[0];
 		for(int i = 1; i < tempSize; i++) {
 			penyebut = penyebut + (inputV[i] + targetV[i]);
 		}
@@ -1210,14 +1259,12 @@ public class GraphTreeListIndex {
 		
 		double pembilang = Math.log(1 + Math.abs(inputV[0] - targetV[0]));
 		for(int i = 1; i < tempSize; i++) {
-			pembilang = pembilang + Math.log(1 + Math.abs(inputV[0] - targetV[0]));
+			pembilang = pembilang + Math.log(1 + Math.abs(inputV[i] - targetV[i]));
 		}
 		
-		int penyebut = inputV[0] + targetV[0];
-		for(int i = 1; i < tempSize; i++) {
-			penyebut = penyebut + (inputV[i] + targetV[i]);
-		}
-		distance = (double) pembilang;
+		double MinValue = 0.0;
+		double MaxValue = tempSize*Math.log(2);
+		distance = (double) normalize(pembilang, MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -1444,6 +1491,9 @@ public class GraphTreeListIndex {
 			}
 		}
 		
+		printArray(inputV);
+		printArray(targetV);
+		
 		double pembilang = Math.max(inputV[0], targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			pembilang = pembilang +  Math.max(inputV[i], targetV[i]);
@@ -1453,7 +1503,10 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			penyebut = penyebut + (inputV[i] + targetV[i]);
 		}
-		distance = (double) pembilang/penyebut;
+		
+		double MinValue = 0.5;
+		double MaxValue = 1.0;
+		distance = normalize((double) pembilang/penyebut, MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -1674,6 +1727,9 @@ public class GraphTreeListIndex {
 			}
 		}
 		
+		printArray(inputV);
+		printArray(targetV);
+		
 		double pembilang = Math.max(inputV[0], targetV[0]) - Math.min(inputV[0], targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			pembilang = pembilang + (Math.max(inputV[i], targetV[i]) - Math.min(inputV[i], targetV[i]));
@@ -1842,7 +1898,7 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			p3 = p3 + (targetV[i]*targetV[i]);
 		}
-		distance = (double) p1/(p2*p3);
+		distance = (double) 1 - p1/(Math.sqrt(p2)*Math.sqrt(p3));
 		return distance;
 	}
 	
@@ -1924,7 +1980,7 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			p3 = p3 + (targetV[i]*targetV[i]);
 		}
-		distance = (double) p1/(p2+p3-p1);
+		distance = (double) 1 - p1/(p2+p3-p1);
 		return distance;
 	}
 	
@@ -2689,8 +2745,13 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			value = value + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
 		}
+		
+		double MinValue = 0.0;
+		double MaxValue = Math.sqrt(inputV.length);
+		
 		distance = Math.sqrt(value);
-		return distance;
+		double finalDistance = normalize(distance, MaxValue, MinValue);
+		return finalDistance;
 	}
 	
 	//2. city block
@@ -2770,7 +2831,11 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			value = value + Math.abs(inputV[i] - targetV[i]);
 		}
-		distance = (double) value;
+		
+		double MinValue = 0.0;
+		double MaxValue = (double) tempSize;
+	
+		distance = normalize((double) value, MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -2853,6 +2918,7 @@ public class GraphTreeListIndex {
 				value = Math.abs(inputV[i] -targetV[i]);
 			}
 		}
+		
 		distance =(double) value;
 		return distance;
 	}
@@ -3111,7 +3177,7 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			penyebut = penyebut +Math.max(inputV[i], targetV[i]);
 		}
-		distance = pembilang/penyebut;
+		distance = (double) pembilang/penyebut;
 		return distance;
 	}
 	
@@ -3278,7 +3344,11 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			value = value + Math.log(1 + Math.abs(inputV[i] + targetV[i]));
 		}
-		distance = value;
+		
+		double MinValue = 0.0;
+		double MaxValue = tempSize * Math.log(2);
+		
+		distance = normalize(value, MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -3452,7 +3522,11 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			penyebut = penyebut + (inputV[i] + targetV[i]);
 		}
-		distance = pembilang/penyebut;
+		
+		double MinValue = 0.5;
+		double MaxValue = 1.0;
+		
+		distance = normalize((double) pembilang/penyebut, MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -3861,30 +3935,32 @@ public class GraphTreeListIndex {
 		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
 			targetV[i] = 0;
 		}
-		for(int i = 0; i < inputV.length; i++) {
-			System.out.println(inputV[i]);
-		}
 		
-		for(int i = 0; i < targetV.length; i++) {
-			System.out.println(targetV[i]);
-		}
+		printArray(inputV);
+		printArray(targetV);
 	
 		double p1 = inputV[0]*targetV[0];
-		for(int i =0; i < tempSize; i++) {
+		for(int i =1; i < tempSize; i++) {
 			p1 = p1 + (inputV[i]*targetV[i]);
 		}
+		
+		System.out.println("p1 "+p1);
 		
 		double p2 = inputV[0]*inputV[0];
 		for(int i =1; i < tempSize; i++) {
 			p2 = p2 + (inputV[i] *inputV[i]);
 		}
 		
+		System.out.println("p2 "+p2);
+		
 		double p3 = targetV[0]*targetV[0];
 		for(int i = 1; i < tempSize; i++) {
 			p3 = p3 + (targetV[i]*targetV[i]);
 		}
 		
-		distance = p1/(Math.sqrt(p2)*Math.sqrt(p3));
+		System.out.println("p3 "+p3);
+		
+		distance = (double) 1 - (p1/(Math.sqrt(p2)*Math.sqrt(p3)));
 		return distance;
 	}
 	
@@ -4817,15 +4893,23 @@ public class GraphTreeListIndex {
 				targetV[i] = 1;
 			}
 		}
-	
+		printArray(inputV);
+		printArray(targetV);
 		double value = (inputV[0] - targetV[0] )*(inputV[0]-targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			value = value + (inputV[i] - targetV[i])*(inputV[i] - targetV[i]);
 		}
 		System.out.println("nilai dari value adalah "+value);
+		double MinValue = 0.0;
+		double MaxValue = Math.max(inputV[0], targetV[0]);
+		for(int i =1; i < tempSize; i++){
+			MaxValue = MaxValue + Math.max(inputV[i], targetV[i]);
+		}
 		distance = Math.sqrt(value);
-		return distance;
+		double finalDistance = normalize(distance,(double) Math.sqrt(MaxValue), MinValue);
+		return finalDistance;
 	}
+	
 	
 	//2. city block
 	public Double cityblockV20(GraphData query,GraphData target){
@@ -4889,12 +4973,23 @@ public class GraphTreeListIndex {
 				targetV[i] = 1;
 			}
 		}
-	
+		
+		printArray(inputV);
+		printArray(targetV);
+		
 		double value = Math.abs(inputV[0] - targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			value = value + Math.abs(inputV[i] - targetV[i]);
 		}
-		distance = value;
+		
+		double MinValue = 0.0;
+		double MaxValue = Math.max(inputV[0], targetV[0]);
+		
+		for(int i =1; i < tempSize; i++) {
+			MaxValue = MaxValue + Math.max(inputV[i], targetV[i]);
+		}
+		
+		distance = normalize((double) value, (double) MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -4968,7 +5063,7 @@ public class GraphTreeListIndex {
 			}
 		}
 		System.out.println("nilai dari value adalah "+value);
-		distance = Math.sqrt(value);
+		distance = (double) value;
 		return distance;
 	}
 	
@@ -5034,7 +5129,10 @@ public class GraphTreeListIndex {
 				targetV[i] = 1;
 			}
 		}
-	
+		
+		printArray(inputV);
+		printArray(targetV);
+		
 		double pembilang = Math.abs(inputV[0] - targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
@@ -5186,7 +5284,8 @@ public class GraphTreeListIndex {
 				targetV[i] = 1;
 			}
 		}
-	
+		printArray(inputV);
+		printArray(targetV);
 		double pembilang = Math.abs(inputV[0] - targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
 			pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
@@ -5344,11 +5443,14 @@ public class GraphTreeListIndex {
 			pembilang = pembilang + Math.log(1 + Math.abs(inputV[i] - targetV[i]));
 		}
 		
-		double penyebut = inputV[0] + targetV[0];
+		double MinValue = 0.0;
+		double MaxValue = Math.log(1 + Math.max(inputV[0], targetV[0]));
+		
 		for(int i = 1; i < tempSize; i++) {
-			penyebut = penyebut + (inputV[i] + targetV[i]);
+			MaxValue = MaxValue + Math.log(1 + Math.max(inputV[i], targetV[i]));
 		}
-		distance = pembilang/penyebut;
+		
+		distance = normalize((double) (pembilang), MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -5502,7 +5604,11 @@ public class GraphTreeListIndex {
 		for(int i = 1; i < tempSize; i++) {
 			penyebut = penyebut + (inputV[i] + targetV[i]);
 		}
-		distance = pembilang/penyebut;
+		
+		double MinValue = 0.5;
+		double MaxValue = 1.0;
+		
+		distance = normalize((double) pembilang/penyebut, MaxValue, MinValue);
 		return distance;
 	}
 	
@@ -5882,7 +5988,7 @@ public class GraphTreeListIndex {
 		for(int i =1; i <tempSize; i++) {
 			p3 = p3 + (targetV[i] *targetV[i]);
 		}
-		distance = pembilang/(Math.sqrt(p2)*Math.sqrt(p3));
+		distance = 1 - pembilang/(Math.sqrt(p2)*Math.sqrt(p3));
 		return distance;
 	}
 	
@@ -6573,10 +6679,722 @@ public class GraphTreeListIndex {
 			for(int i = 1; i < tempSize; i++) {
 				value = value + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
 			}
-			distance = Math.sqrt(value);
+			
+			double MinValue = 0.0;
+			double MaxValue = Math.max(inputV[0], targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				MaxValue = MaxValue + Math.max(inputV[i], targetV[i]);
+			}
+			distance = normalize((double) Math.sqrt(value),(double) Math.sqrt(MaxValue), MinValue);
 			return distance;
 		}
-	public HashMap<String,Double> searchByModification(GraphData query, Double thold) {
+		
+		//city block 
+		public Double cityBlockV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double value =(inputV[0] - targetV[0] )*(inputV[0] - targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				value = value + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
+			}
+			
+			double MinValue = 0.0;
+			double MaxValue = Math.max(inputV[0], targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				MaxValue = MaxValue + Math.max(inputV[i], targetV[i]);
+			}
+			distance = normalize((double) value, MaxValue, MinValue);
+			return distance;
+		}
+	
+		//chebyshev
+		public Double chebyshevV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double value = Math.abs(inputV[0] - targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				value = value + Math.abs(inputV[i] - targetV[i]);
+			}
+			
+			distance = (double)  value;
+			return distance;
+		}
+		
+		
+		//sorensen
+		public Double sorensenV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double pembilang = (double) Math.abs(inputV[0] - targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+			}
+			
+			double penyebut = (double) (inputV[0] + targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				penyebut = penyebut + (inputV[i] + targetV[i]);
+			}
+			
+			distance = (double)  pembilang/penyebut;
+			return distance;
+		}
+		
+		//soergel 
+		public Double soergelV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double pembilang = Math.abs(inputV[0] - targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				pembilang = pembilang + Math.abs(inputV[i] - targetV[i]);
+			}
+			
+			double penyebut = Math.max(inputV[0], targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				penyebut = penyebut +Math.max(inputV[i], targetV[i]);
+			}
+			distance = (double) pembilang/penyebut;
+			return distance;
+		}
+		
+		//lorentzian
+		public Double lorentzianV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double value = Math.log(1 + Math.abs(inputV[0] - targetV[0]));
+			for(int i = 1; i < tempSize; i++) {
+				value = Math.log(1 + Math.abs(inputV[i] - targetV[i]));
+			}
+			
+			double MinValue = 0.0;
+			double MaxValue = Math.log(1 + Math.max(inputV[0], targetV[0]));
+			
+			for(int i = 1; i < tempSize; i++) {
+				MaxValue = MaxValue + Math.log(1 + Math.max(inputV[i], targetV[i]));
+			}
+			
+			distance = (double) normalize(value, MaxValue, MinValue);
+			return distance;
+		}
+		
+		//motyka
+		public Double motykaV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double pembilang = Math.max(inputV[0], targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				pembilang = pembilang + Math.max(inputV[i], targetV[i]);
+			}
+			
+			double penyebut = (double) inputV[0] + targetV[0];
+			for(int i = 1; i < tempSize; i++) {
+				penyebut = penyebut + (inputV[i] + targetV[i]);
+			}
+			
+			double MinValue = 0.5;
+			double MaxValue = 1.0;
+			
+			distance = (double) normalize((double) (pembilang/penyebut), MaxValue, MinValue);
+			return distance;
+		}
+		
+		//tanimoto
+		public Double tanimotoV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			
+			double pembilang = Math.max(inputV[0], targetV[0]) - Math.min(inputV[0], targetV[0]);
+			for(int i =1; i < tempSize; i++) {
+				pembilang = pembilang + (Math.max(inputV[i], targetV[i]) - Math.min(inputV[i], targetV[i]));
+			}
+			
+			double penyebut = Math.max(inputV[0], targetV[0]);
+			for(int i =1; i < tempSize; i++) {
+				penyebut = penyebut + (Math.max(inputV[i], targetV[i]));
+			}
+			
+			distance = (double) (pembilang/penyebut);
+			return distance;
+		}
+		
+		//cosine
+		public Double cosineV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double p1 = inputV[0]*targetV[0];
+			for(int i =1; i < tempSize; i++) {
+				p1 = p1 + (inputV[i]*targetV[i]);
+			}
+			
+			double p2 = inputV[0]*inputV[0];
+			for(int i =1; i < tempSize; i++) {
+				p2 = p2 + (inputV[i] *inputV[i]);
+			}
+			
+			double p3 = targetV[0]*targetV[0];
+			for(int i = 1; i < tempSize; i++) {
+				p3 = p3 + (targetV[i]*targetV[i]);
+			}
+			
+			distance = (double) 1 - (p1/ (Math.sqrt(p2)* Math.sqrt(p3)));
+			return distance;
+		}
+		
+		
+		
+	public HashMap<String,Double> searchByModification(GraphData query, Double thold,
+			String distanceFunction, String vectorSpaceModel) {
 		HashMap<String,Double> finaList = new HashMap<>();
 		//cari candidate anak
 		ArrayList<String> childList = StartPage.graphTreeIndex.getIndexTree().get("root_0");
@@ -6606,7 +7424,202 @@ public class GraphTreeListIndex {
 					GraphData targetX = this.gTreeIndex.get(tempX.get(k));
 					System.out.println(tempX.get(k)+" ukurannya "+cariScore(query, targetX));
 					//if(cariScore(query, targetX) <= thold) {
-						finaList.put(tempX.get(k), euclideanDistanceV21(query, targetX));
+					if(distanceFunction.equals("euclidean")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							double nilai = euclideanDistance(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							double nilai = euclideanDistanceV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+						}else if(vectorSpaceModel.equals("v2.0")){
+							double nilai = euclideanDistanceV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							double nilai = euclideanDistanceV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+						}
+					}else if(distanceFunction.equals("city_block")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							double nilai = cityBlock(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")){
+							double nilai = cityBlockV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							double nilai = cityblockV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							double nilai = cityBlockV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("chebyshev")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> chebyshev v1.0");
+							double nilai = chebyshev(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							double nilai = chebyshevV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							double nilai = chebyshevV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							double nilai = chebyshevV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("sorensen")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> sorensen v1.0");
+							double nilai = sorensen(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							System.out.println("======================> sorensen v1.1");
+							double nilai = sorensenV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							System.out.println("======================> sorensen v2.0");
+							double nilai = sorensenV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							System.out.println("======================> sorensen v2.1");
+							double nilai = sorensenV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("soergel")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> soergel v1.0");
+							double nilai = soergel(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							System.out.println("======================> soergel v1.1");
+							double nilai = soergelV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")){
+							System.out.println("======================> soergel v2.0");
+							double nilai = soergelV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							System.out.println("======================> soergel v2.0");
+							double nilai = soergelV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("lorentzian")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> lorentzian v1.0");
+							double nilai = lorentzian(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							System.out.println("======================> lorentzian v1.1");
+							double nilai = lorentzianV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							System.out.println("======================> lorentzian v2.0");
+							double nilai = lorentzianV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							System.out.println("======================> lorentzian v2.1");
+							double nilai = lorentzianV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("motyka")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> motyka v1.0");
+							double nilai = motyka(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							System.out.println("======================> motyka v1.1");
+							double nilai = motykaV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							System.out.println("======================> motyka v2.0");
+							double nilai = motykaV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							System.out.println("======================> motyka v2.1");
+							double nilai = motykaV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("tanimoto")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> tanimoto v1.0");
+							double nilai = tanimoto(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							System.out.println("======================> tanimoto v1.1");
+							double nilai = tanimotoV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							System.out.println("======================> tanimoto v2.0");
+							double nilai = tanimotoV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							System.out.println("======================> tanimoto v2.1");
+							double nilai = tanimotoV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("cosine")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> cosine v1.0");
+							double nilai = cosine(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							System.out.println("======================> cosine v1.1");
+							double nilai = cosineV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							System.out.println("======================> cosine v2.0");
+							double nilai = cosineV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							System.out.println("======================> cosine v2.1");
+							double nilai = cosineV21(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}else if(distanceFunction.equals("jaccard")) {
+						if(vectorSpaceModel.equals("v1.0")) {
+							System.out.println("======================> jaccard v1.0");
+							double nilai = jaccard(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v1.1")) {
+							System.out.println("======================> jaccard v1.0");
+							double nilai = jaccardV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}
+					}
 					//}
 				}
 			}

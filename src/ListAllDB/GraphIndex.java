@@ -596,6 +596,7 @@ public class GraphIndex {
 					//candidat.add(ee.getKey());
 					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
 					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					System.out.println(ee.getKey());
 					Double nilai = cityBlockV20(graphInput, graphTarget, graphTemp);
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
@@ -620,7 +621,6 @@ public class GraphIndex {
 					//candidat.add(ee.getKey());
 					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
 					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
-					System.out.println(ee.getKey());
 					Double nilai = cityBlockV21(graphInput, graphTarget, graphTemp);
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
@@ -720,6 +720,715 @@ public class GraphIndex {
 					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
 					
 					Double nilai = chebyshevV21(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}
+		}else if(distanceFunction.equals("sorensen")) {
+			if(vectorSpaceModel.equals("v1.0")) {
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					//System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					System.out.println(ee.getKey());
+					Double nilai = sorensen(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v1.1")){
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = sorensenV11(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.0")){
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = sorensenV20(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.1")){
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = sorensenV21(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}
+		}else if (distanceFunction.equals("soergel")){
+			if(vectorSpaceModel.equals("v1.0")) {
+			for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+				ArrayList<Integer> graphInput = new ArrayList<>();
+				for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+					graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+				}
+				
+				ArrayList<Integer> graphTarget = new ArrayList<>();
+				for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+					graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+				}
+				
+				ArrayList<Integer> graphTemp =  new ArrayList<>();
+				for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+					graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+				} 
+				System.out.println(ee.getKey());
+				//candidat.add(ee.getKey());
+				//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+				//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+				
+				Double nilai = soergel(graphInput, graphTarget, graphTemp);
+				if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+			}
+		  }else if(vectorSpaceModel.equals("v1.1")){
+			  System.out.println("======================================= soregel v1.1");
+			  for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = soergelV11(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				} 
+		  }else if(vectorSpaceModel.equals("v2.0")) {
+			  System.out.println("======================================= soregel v2.0");
+			  for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = soergelV20(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				} 
+		  }else {
+			  System.out.println("======================================= soregel v2.1");
+			  for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = soergelV21(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				} 
+		  }
+		}else if(distanceFunction.equals("lorentzian")) {
+			if(vectorSpaceModel.equals("v1.0")) {
+				System.out.println("======================================= lorentzian v1.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = lorentzian(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v1.1")) {
+				System.out.println("======================================= lorentzian v1.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = lorentzianV11(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.0")) {
+				System.out.println("====================================== lorentzian v2.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = lorentzianV20(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else {
+				System.out.println("======================================= lorentzian v2.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = lorentzianV21(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}
+		}else if(distanceFunction.equals("motyka")) {
+			if(vectorSpaceModel.equals("v1.0")) {
+				System.out.println("======================================= motyka v1.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = motyka(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v1.1")) {
+				System.out.println("======================================= motyka v1.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = motykaV11(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.0")) {
+				System.out.println("======================================= motyka v2.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = motykaV20(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.1")){
+				System.out.println("======================================= motyka v2.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = motykaV21(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}
+		}else if(distanceFunction.equals("tanimoto")) {
+			if(vectorSpaceModel.equals("v1.0")){
+				System.out.println("======================================= tanimoto v1.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = tanimoto(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v1.1")){
+				System.out.println("======================================= tanimoto v1.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = tanimotoV11(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.0")) {
+				System.out.println("======================================= tanimoto v2.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = tanimotoV20(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.1")){
+				System.out.println("======================================= tanimoto v2.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = tanimotoV21(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}
+		}else if(distanceFunction.equals("cosine")) {
+			if(vectorSpaceModel.equals("v1.0")) {
+				System.out.println("======================================= cosine v1.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = cosine(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v1.1")){
+				System.out.println("======================================= cosine v1.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = cosineV11(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.0")) {
+				System.out.println("======================================= cosine v2.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = cosineV20(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else {
+				System.out.println("======================================= cosine v2.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = cosineV21(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}
+		}else if(distanceFunction.equals("jaccard")) {
+			if(vectorSpaceModel.equals("v1.0")){
+				System.out.println("======================================= jaccard v1.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = jaccard(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v1.1")) {
+				System.out.println("======================================= jaccard v1.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = jaccardV11(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.0")) {
+				System.out.println("======================================= jaccard v2.0");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = jaccardV20(graphInput, graphTarget, graphTemp);
+					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+				}
+			}else if(vectorSpaceModel.equals("v2.1")){
+				System.out.println("======================================= jaccard v2.1");
+				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
+					ArrayList<Integer> graphInput = new ArrayList<>();
+					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
+						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
+					}
+					
+					ArrayList<Integer> graphTarget = new ArrayList<>();
+					for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
+						graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
+					}
+					
+					ArrayList<Integer> graphTemp =  new ArrayList<>();
+					for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
+						graphTemp.add(tempVValue.get(ee.getKey()).get(i));
+					} 
+					System.out.println(ee.getKey());
+					//candidat.add(ee.getKey());
+					//candidatValue.add(euclideanDistance(graphInput,graphTarget,graphTemp));
+					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
+					
+					Double nilai = jaccardV21(graphInput, graphTarget, graphTemp);
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
@@ -1385,15 +2094,22 @@ public class GraphIndex {
 			}
 		}
 		
-		int pembilang = Math.abs(input[0] - target[0]);
+		printArray(input);
+		printArray(target);
+		
+		Double pembilang = (double) Math.abs(input[0] - target[0]);
 		for(int i = 1; i < input.length; i++) {
 			pembilang = pembilang + Math.abs(input[i] -target[i]);
 		}
-		int penyebut = input[0] + target[0];
+		System.out.println("pembilang "+pembilang);
+		Double penyebut = (double) input[0] + target[0];
 		for(int i = 1; i < input.length; i++) {
 			penyebut = penyebut + (input[i] + target[i]);
 		}
-		Double tempValue = (double) (pembilang/penyebut);
+		System.out.println("penyebut "+penyebut);
+		
+		double tempValue = (double) (pembilang/penyebut);
+		System.out.println("tempValue "+(double) pembilang/penyebut);
 		score = tempValue;
 		return score;
 	}
@@ -1564,16 +2280,17 @@ public class GraphIndex {
 				target[i] = 0;
 			}
 		}
-		
-		int pembilang = Math.abs(input[0] - target[0]);
+		printArray(input);
+		printArray(target);
+		Double pembilang = (double) Math.abs(input[0] - target[0]);
 		for(int i = 1; i < input.length; i++) {
 			pembilang = pembilang + Math.abs(input[i] -target[i]);
 		}
-		int penyebut;
+		Double penyebut;
 		if(input[0] >= target[0]) {
-			penyebut = input[0];
+			penyebut = (double) input[0];
 		}else {
-			penyebut = target[0];
+			penyebut = (double) target[0];
 		}
 		for(int i = 1; i < input.length; i++) {
 			if(input[i] >= target[i]) {
@@ -1854,10 +2571,12 @@ public class GraphIndex {
 					target[i] = 0;
 				}
 			}
+			printArray(input);
+			printArray(target);
 			
 			double value = Math.log(1 + ((double) Math.abs(input[0] - target[0])));
 			for(int i = 0; i < input.length; i++) {
-				value = value + Math.log(1 + ((double) Math.abs(input[0] - target[0])));
+				value = value + Math.log(1 + ((double) Math.abs(input[i] - target[i])));
 			}
 			
 			double MinValue = 0.0;
@@ -2220,11 +2939,15 @@ public class GraphIndex {
 					target[i] = 0;
 				}
 			}
-			int pembilang;
+			
+			printArray(input);
+			printArray(target);
+			
+			double pembilang;
 			if(input[0] >= target [0]) {
-				pembilang = input[0];
+				pembilang = (double) input[0];
 			}else {
-				pembilang = target[0];
+				pembilang = (double)target[0];
 			}
 			for(int i = 1; i < input.length; i++) {
 				if(input[i] >= target[i]) {
@@ -2233,7 +2956,7 @@ public class GraphIndex {
 					pembilang = pembilang + target[i];
 				}
 			}
-			int penyebut = input[0] + target[0];
+			double penyebut = (double) input[0] + target[0];
 			for(int i = 1; i < input.length; i++) {
 				penyebut = penyebut + (input[i] + target[i]);
 			}
@@ -2529,12 +3252,15 @@ public class GraphIndex {
 				}
 			}
 			
-			int pembilang;
-			pembilang = Math.max(input[0], target[0]) - Math.min(input[0], target[0]);
+			printArray(input);
+			printArray(target);
+			
+			double pembilang;
+			pembilang = (double) Math.max(input[0], target[0]) - Math.min(input[0], target[0]);
 			for(int i = 1; i < input.length; i++) {
 				pembilang = pembilang + (Math.max(input[i], target[i]) - Math.min(input[i],target[i]));
 			}
-			int penyebut = Math.max(input[0], target[0]);
+			double penyebut = (double) Math.max(input[0], target[0]);
 			for(int i = 1; i < input.length; i++) {
 				penyebut = penyebut + Math.max(input[i],target[i]);
 			}
@@ -2795,15 +3521,18 @@ public class GraphIndex {
 				}
 			}
 			
-			int pembilang = input[0]*target[0];
+			printArray(input);
+			printArray(target);
+			
+			double pembilang = (double)input[0]*target[0];
 			for(int i = 1; i < input.length; i++) {
 				pembilang = pembilang + input[i]*target[i];
 			}
-			int p1 = input[0]*input[0];
+			double p1 = (double) input[0]*input[0];
 			for(int i = 1; i < input.length; i++) {
 				p1 = p1 + input[i]*input[i];
 			}
-			int p2 = target[0]*target[0];
+			double p2 = (double) target[0]*target[0];
 			for(int i = 1; i < input.length; i++) {
 				p2 = p2 + target[i]*target[i];
 			}
@@ -2987,23 +3716,33 @@ public class GraphIndex {
 				}
 			}
 			
-			int pembilang = (input[0]-target[0])*(input[0] - target[0]);
+			printArray(input);
+			printArray(target);
+			
+			double pembilang =(double) (input[0]-target[0])*(input[0] - target[0]);
 			for(int i = 1; i < input.length; i++) {
 				pembilang = pembilang + ((input[i] - target[i])*(input[i] - target[i]));
 			}
 			
-			int penyebut;
-			int p1 = input[0] * input[0];
-			int p2 = target[0] * target[0];
-			int p3 = input[0] * target[0];
-			penyebut = p1 + p2  - p3;
-			for(int i = 1; i < input.length; i++) {
-				p1 = p1 + input[i]*input[i];
-				p2 = p2 + target[i]*target[i];
-				p3 = p3 + input[i]*target[i];
-				penyebut = penyebut + (p1 + p2 -p3);
+			
+			double p1 = (double) (input[0] * input[0]);
+			
+			for(int i =1; i < input.length; i++) {
+				p1 = p1 + (input[i]*target[i]);
 			}
-			Double tempValue = (double) (pembilang/penyebut);
+			
+			double p2 = (double) target[0] * target[0];
+			for(int i = 1; i < input.length; i++) {
+				p2 = p2 + (target[i] * target[i]);
+			}
+			
+			double p3 = (double) input[0] * target[0];
+			for(int i = 1; i < input.length; i++) {
+				p3 = p3 + (input[i] * target[i]);
+			}
+			
+			
+			Double tempValue = (double) (pembilang/(p1 + p2 - p3));
 			score = tempValue;
 			return score;
 		}
@@ -4026,7 +4765,7 @@ public class GraphIndex {
 		return score;
 	}
 	
-	//5. sorensen
+	//5. soergel
 	public static Double soergelV11(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
 		Double score;
 		int a = graphInput.size();
@@ -4087,11 +4826,11 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int pembilang= Math.abs(inputV1_1[0] - targetV1_1[0]);
+		Double pembilang= (double) Math.abs(inputV1_1[0] - targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			pembilang = pembilang + Math.abs(inputV1_1[i] - targetV1_1[i]);
 		}
-		int penyebut = Math.max(inputV1_1[0], targetV1_1[0]);
+		Double penyebut = (double) Math.max(inputV1_1[0], targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			penyebut = penyebut + Math.max(inputV1_1[i], targetV1_1[i]);
 		}
@@ -4170,7 +4909,7 @@ public class GraphIndex {
 		return score;
 	}
 
-	//7. soergel
+	//7. sorensen
 	public static Double sorensenV11(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
 		Double score;
 		int a = graphInput.size();
@@ -4231,11 +4970,11 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int pembilang= Math.abs(inputV1_1[0] - targetV1_1[0]);
+		Double pembilang= (double)Math.abs(inputV1_1[0] - targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			pembilang = pembilang + Math.abs(inputV1_1[i] - targetV1_1[i]);
 		}
-		int penyebut = inputV1_1[0] + targetV1_1[0];
+		Double penyebut = (double) inputV1_1[0] + targetV1_1[0];
 		for(int i = 1; i < inputV1_1.length; i++) {
 			penyebut = penyebut + (inputV1_1[i] + targetV1_1[i]);
 		}
@@ -4526,11 +5265,13 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int pembilang= Math.abs(inputV1_1[0] - targetV1_1[0]);
+		double pembilang= (double) Math.abs(inputV1_1[0] + targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
-			pembilang = pembilang + Math.abs(inputV1_1[i] - targetV1_1[i]);
+			pembilang = pembilang + Math.abs(inputV1_1[i] + targetV1_1[i]);
 		}
-		int penyebut = Math.max(inputV1_1[0], targetV1_1[0]);
+		
+		System.out.println("pembilang "+pembilang);
+		double penyebut = (double) Math.max(inputV1_1[0], targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			penyebut = penyebut + Math.max(inputV1_1[i], targetV1_1[i]);
 		}
@@ -4540,6 +5281,7 @@ public class GraphIndex {
 		
 		Double tempValue = (double) penyebut/pembilang;
 		score = normalize(tempValue, MaxValue, MinValue);
+		System.out.println("score "+score);
 		return score;
 	}
 	
@@ -4752,11 +5494,12 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int pembilang= Math.max(inputV1_1[0], targetV1_1[0]) - Math.min(inputV1_1[0], targetV1_1[0]);
+		
+		double pembilang= (double) Math.max(inputV1_1[0], targetV1_1[0]) - Math.min(inputV1_1[0], targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			pembilang = pembilang +(Math.max(inputV1_1[i], targetV1_1[i]) - Math.min(inputV1_1[i], targetV1_1[i]));
 		}
-		int penyebut = Math.max(inputV1_1[0], targetV1_1[0]);
+		double penyebut = (double) Math.max(inputV1_1[0], targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			penyebut = penyebut + Math.max(inputV1_1[i], targetV1_1[i]);
 		}
@@ -6148,15 +6891,18 @@ public class GraphIndex {
 		}
 		printArray(inputV2_0);
 		printArray(targetV2_0);
-		int pembilang = Math.abs(inputV2_0[0] - targetV2_0[0]);
+		Double pembilang = (double) Math.abs(inputV2_0[0] - targetV2_0[0]);
 		for(int i = 1; i < inputV2_0.length; i++) {
 			pembilang = pembilang + Math.abs(inputV2_0[i] - targetV2_0[i]);
 		}
 		
-		int penyebut = inputV2_0[0] + targetV2_0[0];
+		System.out.println("pembilang "+pembilang);
+		
+		Double penyebut =(double) inputV2_0[0] + targetV2_0[0];
 		for(int i = 1; i < inputV2_0.length; i++) {
-			penyebut = penyebut + (inputV2_0[i] + inputV2_0[i]);
+			penyebut = penyebut + (inputV2_0[i] + targetV2_0[i]);
 		}
+		System.out.println("penyebut "+penyebut);
 		
 		Double tempValue = (double) pembilang/penyebut;
 		score = tempValue;
@@ -6334,12 +7080,12 @@ public class GraphIndex {
 		}
 		printArray(inputV2_0);
 		printArray(targetV2_0);
-		int pembilang = Math.abs(inputV2_0[0] - targetV2_0[0]);
+		double pembilang = (double) Math.abs(inputV2_0[0] - targetV2_0[0]);
 		for(int i = 1; i < inputV2_0.length; i++) {
 			pembilang = pembilang + Math.abs(inputV2_0[i] - targetV2_0[i]);
 		}
 		
-		int penyebut = Math.max(inputV2_0[0], targetV2_0[0]);
+		double penyebut = (double) Math.max(inputV2_0[0], targetV2_0[0]);
 		for(int i = 1; i < inputV2_0.length; i++) {
 			penyebut = penyebut + Math.max(inputV2_0[i], targetV2_0[i]);
 		}
@@ -6529,6 +7275,8 @@ public class GraphIndex {
 			value = value +  Math.log(1 + Math.abs(inputV2_0[i] - targetV2_0[i]));
 		}
 		
+		System.out.println("value "+value);
+		
 		double MinValue = 0.0;
 		double MaxValue = 0.0;
 		if(inputV2_0[0] > targetV2_0[0]) {
@@ -6544,6 +7292,8 @@ public class GraphIndex {
 				MaxValue = MaxValue + Math.log(1 + targetV2_0[i]);
 			}
 		}
+		
+		System.out.println("MaxValue "+MaxValue);
 		
 		double finalMaxValue = MaxValue;
 		
@@ -6723,18 +7473,20 @@ public class GraphIndex {
 		}
 		printArray(inputV2_0);
 		printArray(targetV2_0);
-		int pembilang = Math.max(inputV2_0[0], targetV2_0[0]);
+		double pembilang = (double) Math.max(inputV2_0[0], targetV2_0[0]);
 		for(int i = 1; i < inputV2_0.length; i++) {
 			pembilang = pembilang + Math.max(inputV2_0[i], targetV2_0[i]);
 		}
 		
-		int penyebut = inputV2_0[0] + targetV2_0[0];
+		
+		
+		double penyebut = (double) inputV2_0[0] + targetV2_0[0];
 		for(int i = 1; i < inputV2_0.length; i++) {
 			penyebut = penyebut + (inputV2_0[i] + targetV2_0[i]);
 		}
 		
 		double MinValue = 0.5;
-		double MaxValue = 0.1;
+		double MaxValue = 1.0;
 		
 		
 		Double tempValue = (double) pembilang/penyebut;
@@ -7010,12 +7762,12 @@ public class GraphIndex {
 		}
 		printArray(inputV2_0);
 		printArray(targetV2_0);
-		int pembilang = Math.max(inputV2_0[0], targetV2_0[0])- Math.min(inputV2_0[0], targetV2_0[0]);
+		double pembilang = (double) Math.max(inputV2_0[0], targetV2_0[0])- Math.min(inputV2_0[0], targetV2_0[0]);
 		for(int i = 1; i < inputV2_0.length; i++) {
 			pembilang = pembilang + (Math.max(inputV2_0[i], targetV2_0[i]) - Math.min(inputV2_0[i], targetV2_0[i]));
 		}
 		
-		int penyebut = Math.max(inputV2_0[0], targetV2_0[0]);
+		double penyebut = (double) Math.max(inputV2_0[0], targetV2_0[0]);
 		for(int i = 1; i < inputV2_0.length; i++) {
 			penyebut = penyebut + Math.max(inputV2_0[i], targetV2_0[i]);
 		}
@@ -7195,7 +7947,7 @@ public class GraphIndex {
 		printArray(targetV2_0);
 		int p1 = inputV2_0[0] * targetV2_0[0];
 		for(int i = 1; i < inputV2_0.length; i++) {
-			p1 = p1 + (inputV2_0[0] * targetV2_0[0]);
+			p1 = p1 + (inputV2_0[i] * targetV2_0[i]);
 		}
 		
 		int p2 = inputV2_0[0]*inputV2_0[0];
@@ -7392,24 +8144,34 @@ public class GraphIndex {
 		printArray(inputV2_0);
 		printArray(targetV2_0);
 		
-		int pembilang = (inputV2_0[0] - targetV2_0[0])*(inputV2_0[0] - targetV2_0[0]);
+		double pembilang = (double) (inputV2_0[0] - targetV2_0[0])*(inputV2_0[0] - targetV2_0[0]);
 		for(int i = 1; i < inputV2_0.length; i++) {
 			pembilang = pembilang +( (inputV2_0[i] - targetV2_0[i])*(inputV2_0[i] - targetV2_0[i]));
 		}
-		int p1 = inputV2_0[0] * targetV2_0[0];
+		
+		System.out.println("pembilang "+pembilang);
+		
+		double p1 = (double) inputV2_0[0] * targetV2_0[0];
 		for(int i = 1; i < inputV2_0.length; i++) {
-			p1 = p1 + (inputV2_0[0] * targetV2_0[0]);
+			p1 = p1 + (inputV2_0[i] * targetV2_0[i]);
 		}
 		
-		int p2 = inputV2_0[0]*inputV2_0[0];
+		System.out.println("p1 "+p1);
+		
+		double p2 = (double) inputV2_0[0]*inputV2_0[0];
 		for(int i = 1; i < targetV2_0.length; i++) {
 			p2 = p2 + (inputV2_0[i] * inputV2_0[i]);
 		}
 		
-		int p3 = targetV2_0[0]*targetV2_0[0];
+		System.out.println("p2 "+p2);
+		
+		double p3 = (double) targetV2_0[0]*targetV2_0[0];
 		for(int i = 1; i < inputV2_0.length; i++) {
 			p3 = p3 + (targetV2_0[i]* targetV2_0[i]);
 		}
+		
+		System.out.println("p3 "+p3);
+		
 		Double tempValue = (double) pembilang/(p2 + p3 - p1);
 		score = tempValue;
 		return score;
@@ -8335,7 +9097,7 @@ public class GraphIndex {
 			MaxValue = targetV1_1[0];
 		}
 		
-		for(int i = 0; i < inputV1_1.length; i++) {
+		for(int i = 1; i < inputV1_1.length; i++) {
 			if(inputV1_1[i] > targetV1_1[i]) {
 				MaxValue = MaxValue + inputV1_1[i]; 
 			}else {
@@ -8511,17 +9273,20 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int value = Math.abs(inputV1_1[0] - targetV1_1[0]);
+		Double value = (double) Math.abs(inputV1_1[0] - targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			value = value + Math.abs(inputV1_1[i] - targetV1_1[i]);
 		}
+		System.out.println("pembilang "+value);
 		
-		int penyebut = inputV1_1[0] - targetV1_1[0];
+		Double penyebut = (double) inputV1_1[0] + targetV1_1[0];
 		for(int i = 1; i < inputV1_1.length; i++) {
 			penyebut = penyebut + (inputV1_1[i] + targetV1_1[i]);
 		}
 		
-		Double tempValue = (double) value;
+		System.out.println("penyebut "+penyebut);
+		
+		Double tempValue = (double) value/penyebut;
 		score = tempValue;
 		return score;
 	}
@@ -8926,7 +9691,7 @@ public class GraphIndex {
 	//13. czekanowski = sorensen
 	
 	//14. motyka
-	public static Double waveHedgesV21(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
+	public static Double motykaV21(ArrayList<Integer> graphInput, ArrayList<Integer> graphTarget, ArrayList<Integer> graphTemp) {
 		Double score;
 		int a = graphInput.size();
 		int b = graphTarget.size();
@@ -8989,12 +9754,12 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int value = Math.min(inputV1_1[0],targetV1_1[0]);
+		double value = (double) Math.max(inputV1_1[0],targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
-			value = value + Math.min(inputV1_1[i],targetV1_1[i]);
+			value = value + Math.max(inputV1_1[i],targetV1_1[i]);
 		}
 		
-		int penyebut = inputV1_1[0] + targetV1_1[0];
+		double penyebut = (double) inputV1_1[0] + targetV1_1[0];
 		for(int i =1; i < inputV1_1.length; i++) {
 			penyebut = penyebut + (inputV1_1[i] + targetV1_1[i]);
 		}
@@ -9223,12 +9988,12 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int value = Math.max(inputV1_1[0],targetV1_1[0]) - Math.min(inputV1_1[0], targetV1_1[0]);
+		double value = (double) Math.max(inputV1_1[0],targetV1_1[0]) - Math.min(inputV1_1[0], targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			value = value + (Math.max(inputV1_1[i], targetV1_1[i]) - Math.min(inputV1_1[i], targetV1_1[i]));
 		}
 		
-		int penyebut = Math.max(inputV1_1[0],targetV1_1[0]);
+		double penyebut =(double) Math.max(inputV1_1[0],targetV1_1[0]);
 		for(int i =1; i < inputV1_1.length; i++) {
 			penyebut = penyebut + Math.max(inputV1_1[0],targetV1_1[i]);
 		}
@@ -9389,7 +10154,7 @@ public class GraphIndex {
 			p3 = p3 + (targetV1_1[i] * targetV1_1[i]);
 		}
 		
-		Double tempValue = (double) p1/(p2 * p3);
+		Double tempValue = (double) p1/(Math.sqrt(p2) * Math.sqrt(p3));
 		score = 1 - tempValue;
 		return score;
 	}
@@ -9538,22 +10303,27 @@ public class GraphIndex {
 		}
 		printArray(inputV1_1);
 		printArray(targetV1_1);
-		int p1 = (inputV1_1[0] - targetV1_1[0])*(inputV1_1[0] - targetV1_1[0]);
+		double p1 = (double) (inputV1_1[0] - targetV1_1[0])*(inputV1_1[0] - targetV1_1[0]);
 		for(int i = 1; i < inputV1_1.length; i++) {
 			p1 = p1 + (inputV1_1[i] - targetV1_1[i])*(inputV1_1[i] - targetV1_1[i]);
 		}
 		
-		int p2 = inputV1_1[0] * inputV1_1[0];
+		double p2 = (double) inputV1_1[0] * inputV1_1[0];
 		for(int i = 1; i < inputV1_1.length; i++) {
 			p2 = p2 + inputV1_1[i]*inputV1_1[i];
 		}
 		
-		int p3 = targetV1_1[0] * targetV1_1[0];
+		double p3 = (double) targetV1_1[0] * targetV1_1[0];
 		for(int i = 1; i < inputV1_1.length; i++) {
 			p3 = p3 + (targetV1_1[i] * targetV1_1[i]);
 		}
 		
-		Double tempValue = (double) p1/(p2 + p3 -p1);
+		double p4 = (double) inputV1_1[0]*targetV1_1[0];
+		for(int i = 1; i < inputV1_1.length; i++) {
+			p4 = p4 + (inputV1_1[i] * targetV1_1[i]);
+		}
+		
+		Double tempValue = (double) p1/(p2 + p3 -p4);
 		score = tempValue;
 		return score;
 	}

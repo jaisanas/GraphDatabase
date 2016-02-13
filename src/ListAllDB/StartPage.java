@@ -55,6 +55,8 @@ public class StartPage extends JFrame {
 	public static String ModeSearching;
 	public static String ModeSimilarity;
 	public static HashMap<String,Double> result;
+	public static String vectorSpaceModel;
+	
 	/**
 	 * Launch the application.
 	 */
