@@ -4121,13 +4121,9 @@ public class GraphTreeListIndex {
 		for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
 			targetV[i] = 0;
 		}
-		for(int i = 0; i < inputV.length; i++) {
-			System.out.println(inputV[i]);
-		}
 		
-		for(int i = 0; i < targetV.length; i++) {
-			System.out.println(targetV[i]);
-		}
+		printArray(inputV);
+		printArray(targetV);
 		
 		double pembilang = (inputV[0] -targetV[0])*(inputV[0] -targetV[0]);
 		for(int i = 1; i < tempSize; i++) {
@@ -4135,7 +4131,7 @@ public class GraphTreeListIndex {
 		}
 		
 		double p1 = inputV[0]*targetV[0];
-		for(int i =0; i < tempSize; i++) {
+		for(int i =1; i < tempSize; i++) {
 			p1 = p1 + (inputV[i]*targetV[i]);
 		}
 		
@@ -7391,6 +7387,102 @@ public class GraphTreeListIndex {
 			return distance;
 		}
 		
+		//jaccard
+		public Double jaccardV21(GraphData query,GraphData target){
+			int fullEquals = 0;
+			int halfEquals = 0;
+			int fullNotEquals = 0;
+			int tempSize;
+			Double distance = 0.00;
+			HashMap<String, ArrayList<ArrayList<String>>> queryMap = query.getGraph();
+			HashMap<String,ArrayList<ArrayList<String>>> targetMap = target.getGraph();
+			if(queryMap.size() >= targetMap.size()) {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : queryMap.entrySet()) {
+					String key = ee.getKey();
+					ArrayList<ArrayList<String>> value = ee.getValue();
+					if(targetMap.get(key)== null) {
+						fullNotEquals++;
+					}else {
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						}
+					}
+				}
+			}else {
+				for (Entry<String, ArrayList<ArrayList<String>>> ee : targetMap.entrySet()) {
+					String key = ee.getKey();
+					if(queryMap.get(key)==null) {
+						fullNotEquals++;
+					}else {
+						ArrayList<ArrayList<String>> value = queryMap.get(key);
+						if(!isContain(targetMap.get(key), value.get(0))) {
+							halfEquals++;
+						}else {
+							fullEquals++;
+						} 
+					}
+				}
+			}
+			
+			tempSize = fullEquals + halfEquals + (queryMap.size() - (fullEquals + halfEquals)) + (targetMap.size() - (fullEquals + halfEquals));
+			
+			// isi array input maupun target
+			double [] inputV = new double[tempSize];
+			double [] targetV = new double[tempSize];
+			for(int i = 0; i < fullEquals; i++) {
+				inputV[i] = 1;
+				targetV[i] = 1;
+			}
+			
+			for(int i = fullEquals; i < (fullEquals + halfEquals); i++) {
+				inputV[i] = 0.5;
+				targetV[i] = 0.5;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				inputV[i] = 0;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				inputV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals); i < (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i++) {
+				targetV[i] = 1;
+			}
+			for(int i = (fullEquals + halfEquals + (targetMap.size() - (fullEquals + halfEquals))); i < tempSize; i++) {
+				targetV[i] = 0;
+			}
+			for(int i = 0; i < inputV.length; i++) {
+				System.out.println(inputV[i]);
+			}
+			
+			for(int i = 0; i < targetV.length; i++) {
+				System.out.println(targetV[i]);
+			}
+		
+			double pembilang = (inputV[0] -targetV[0])*(inputV[0] -targetV[0]);
+			for(int i = 1; i < tempSize; i++) {
+				pembilang = pembilang + ((inputV[i] - targetV[i]) * (inputV[i] - targetV[i]));
+			}
+			
+			double p1 = inputV[0]*targetV[0];
+			for(int i =1; i < tempSize; i++) {
+				p1 = p1 + (inputV[i]*targetV[i]);
+			}
+			
+			double p2 = inputV[0]*inputV[0];
+			for(int i =1; i < tempSize; i++) {
+				p2 = p2 + (inputV[i] *inputV[i]);
+			}
+			
+			double p3 = targetV[0]*targetV[0];
+			for(int i = 1; i < tempSize; i++) {
+				p3 = p3 + (targetV[i]*targetV[i]);
+			}
+			
+			distance = pembilang/(p2 + p3 - p1);
+			return distance;
+		}
 		
 		
 	public HashMap<String,Double> searchByModification(GraphData query, Double thold,
@@ -7413,6 +7505,8 @@ public class GraphTreeListIndex {
 		System.out.println("tempnya ialah "+temp.get(0));
 		GraphData target = this.gTreeIndex.get("root_0");
 		System.out.println("ukurannya yaitu "+cariScoreModification(query, target));
+		long startTime = 0;
+		long stopTime = 0;
 		if(cariScoreModification(query, target) >= 0.50) {
 			System.out.println("masuk yang sebelah sini >= 0.50 ");
 			for(int i = 0; i < temp.size(); i++) {
@@ -7424,6 +7518,7 @@ public class GraphTreeListIndex {
 					GraphData targetX = this.gTreeIndex.get(tempX.get(k));
 					System.out.println(tempX.get(k)+" ukurannya "+cariScore(query, targetX));
 					//if(cariScore(query, targetX) <= thold) {
+					startTime = System.nanoTime();
 					if(distanceFunction.equals("euclidean")) {
 						if(vectorSpaceModel.equals("v1.0")) {
 							double nilai = euclideanDistance(query, targetX);
@@ -7614,18 +7709,32 @@ public class GraphTreeListIndex {
 							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
 							System.out.println(tempX.get(k)+" ukurannya "+nilai);
 						}else if(vectorSpaceModel.equals("v1.1")) {
-							System.out.println("======================> jaccard v1.0");
+							System.out.println("======================> jaccard v1.1");
 							double nilai = jaccardV11(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.0")) {
+							System.out.println("======================> jaccard v2.0");
+							double nilai = jaccardV20(query, targetX);
+							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
+							System.out.println(tempX.get(k)+" ukurannya "+nilai);
+						}else if(vectorSpaceModel.equals("v2.1")) {
+							System.out.println("======================> jaccard v2.1");
+							double nilai = jaccardV21(query, targetX);
 							if(nilai <= StartPage.tHold) finaList.put(tempX.get(k),nilai);
 							System.out.println(tempX.get(k)+" ukurannya "+nilai);
 						}
 					}
 					//}
+					
+					stopTime = System.nanoTime();
 				}
+				
 			}
 		}else {
 			finaList = null;
 		}
+		StartPage.elapsedTime = stopTime - startTime;
 		System.out.println("ukuran finalist "+finaList.size());
 		return finaList;
 	}

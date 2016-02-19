@@ -664,7 +664,7 @@ public class EditorActions
 						Object[] par = new Object[1];
 						par[0] = parent;
 						Object [] sisis = graph.getAllEdges(par);
-						System.out.println(sisis.length);
+						System.out.println("======================================================> "+sisis.length);
 						ArrayList<String> edgeReminder = new ArrayList();
 						HashMap<String, ArrayList<BiMap>> hm = new HashMap<String, ArrayList<BiMap>>();
 						HashMap<String,ArrayList<String>> gDt = new HashMap<>();
@@ -677,7 +677,7 @@ public class EditorActions
 							edgeReminder.add(labelSisi);
 							System.out.println(labelSisi);
 							String [] tempEdge = labelSisi.split("\\|");
-							System.out.println("tempEdge "+tempEdge[0]);
+							System.out.println("tempEdge ====================================> "+tempEdge[0]);
 							String labelSource = (String) sisi.getSource().getValue();
 							String [] tempSource = labelSource.split("\\|");
 							String labelTarget = (String) sisi.getTarget().getValue();

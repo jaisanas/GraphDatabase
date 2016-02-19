@@ -125,6 +125,15 @@ public class CompareView extends JDialog {
 		btnNewButton.setBounds(140, 528, 152, 53);
 		contentPanel.add(btnNewButton);
 		
+		
+		JLabel lblTimeOfExceution = new JLabel("Time Of Exceution");
+		lblTimeOfExceution.setBounds(872, 222, 117, 14);
+		contentPanel.add(lblTimeOfExceution);
+		
+		JLabel label_time = new JLabel(""+StartPage.elapsedTime);
+		label_time.setBounds(872, 247, 117, 14);
+		contentPanel.add(label_time);
+		
 		JButton button = new JButton("Detail Graph Query");
 		button.setBounds(615, 528, 152, 53);
 		contentPanel.add(button);
@@ -211,7 +220,7 @@ public class CompareView extends JDialog {
 		contentPanel.add(lblDistanceScore);
 		
 		JLabel label = new JLabel("0");
-		label.setBounds(872, 175, 46, 14);
+		label.setBounds(872, 175, 117, 14);
 		contentPanel.add(label);
 		
 		JButton btnNewButton = new JButton("Detail Graph Target");
@@ -225,6 +234,14 @@ public class CompareView extends JDialog {
 		JButton button = new JButton("Detail Graph Query");
 		button.setBounds(615, 528, 152, 53);
 		contentPanel.add(button);
+		
+		JLabel lblTimeOfExceution = new JLabel("Time Of Exceution");
+		lblTimeOfExceution.setBounds(872, 222, 117, 14);
+		contentPanel.add(lblTimeOfExceution);
+		
+		JLabel label_time = new JLabel(""+StartPage.elapsedTime);
+		label_time.setBounds(872, 247, 117, 14);
+		contentPanel.add(label_time);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

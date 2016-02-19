@@ -56,6 +56,7 @@ public class StartPage extends JFrame {
 	public static String ModeSimilarity;
 	public static HashMap<String,Double> result;
 	public static String vectorSpaceModel;
+	public static long elapsedTime;
 	
 	/**
 	 * Launch the application.

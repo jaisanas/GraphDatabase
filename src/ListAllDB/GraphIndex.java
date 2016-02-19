@@ -430,12 +430,13 @@ public class GraphIndex {
 		HashMap<String,Double> result = new HashMap<>();
 		ArrayList<String> candidat = new ArrayList<>();
 		ArrayList<Double> candidatValue = new ArrayList<>();
-		
+		long startTime = 0;
+		long stopTime = 0;
 		if(distanceFunction.equals("euclidean")) {
 			if(vectorSpaceModel.equals("v1.0")) {
+				startTime = System.nanoTime();
 				System.out.println("================================================= euclidean v1.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
-					
 					ArrayList<Integer> graphInput = new ArrayList<>();
 					for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
 						graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
@@ -456,8 +457,11 @@ public class GraphIndex {
 					//System.out.println(euclideanDistance(graphInput,graphTarget,graphTemp));
 					Double nilai = euclideanDistance(graphInput,graphTarget,graphTemp);
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
+					
 				}
+				stopTime = System.nanoTime();
 			}else if(vectorSpaceModel.equals("v1.1")) {
+				startTime = System.nanoTime();
 				System.out.println("================================================= euclidean v1.1");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
 					
@@ -478,7 +482,9 @@ public class GraphIndex {
 					Double nilai = euclideanDistanceV11(graphInput,graphTarget,graphTemp);
 					if(nilai <= tMagnitude) result.put(ee.getKey(),nilai);
 				}
+				stopTime = System.nanoTime();
 			} else if(vectorSpaceModel.equals("v2.0")) {
+				startTime = System.nanoTime();
 				System.out.println("================================================= euclidean v2.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
 					ArrayList<Integer> graphInput = null;
@@ -500,7 +506,9 @@ public class GraphIndex {
 					//System.out.println(ee.getKey()+" "+euclideanDistanceV20(graphInput,graphTarget,graphTemp));
 					if(nilai <= tMagnitude) result.put(ee.getKey(),nilai);
 			  }
+			stopTime = System.nanoTime();
 		   }else {
+			   startTime = System.nanoTime();
 			   	System.out.println("========================================= euclidean V2.1");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
 					ArrayList<Integer> graphInput = null;
@@ -524,8 +532,10 @@ public class GraphIndex {
 					//System.out.println(ee.getKey()+" "+euclideanDistanceV21(graphInput,graphTarget,graphTemp));
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
+				stopTime = System.nanoTime();
 		   }
 		} else if(distanceFunction.equals("city_block")) {
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")){
 				System.out.println("========================================= city block V1.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
@@ -625,7 +635,9 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
+			stopTime = System.nanoTime();
 		}else if(distanceFunction.equals("chebyshev")){
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")) {
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
 					ArrayList<Integer> graphInput = new ArrayList<>();
@@ -723,7 +735,9 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
+			stopTime = System.nanoTime();
 		}else if(distanceFunction.equals("sorensen")) {
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")) {
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
 					ArrayList<Integer> graphInput = new ArrayList<>();
@@ -821,7 +835,9 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
+			stopTime = System.nanoTime();
 		}else if (distanceFunction.equals("soergel")){
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")) {
 			for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
 				ArrayList<Integer> graphInput = new ArrayList<>();
@@ -872,6 +888,7 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				} 
 		  }else if(vectorSpaceModel.equals("v2.0")) {
+			  startTime = System.nanoTime();
 			  System.out.println("======================================= soregel v2.0");
 			  for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
 					ArrayList<Integer> graphInput = new ArrayList<>();
@@ -922,7 +939,9 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				} 
 		  }
+			stopTime = System.nanoTime();
 		}else if(distanceFunction.equals("lorentzian")) {
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")) {
 				System.out.println("======================================= lorentzian v1.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
@@ -1024,7 +1043,9 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
+			stopTime = System.nanoTime();
 		}else if(distanceFunction.equals("motyka")) {
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")) {
 				System.out.println("======================================= motyka v1.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
@@ -1125,8 +1146,11 @@ public class GraphIndex {
 					Double nilai = motykaV21(graphInput, graphTarget, graphTemp);
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
+				
 			}
+			stopTime = System.nanoTime();
 		}else if(distanceFunction.equals("tanimoto")) {
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")){
 				System.out.println("======================================= tanimoto v1.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
@@ -1228,7 +1252,9 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
+			stopTime = System.nanoTime();
 		}else if(distanceFunction.equals("cosine")) {
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")) {
 				System.out.println("======================================= cosine v1.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
@@ -1330,7 +1356,9 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
+			stopTime = System.nanoTime();
 		}else if(distanceFunction.equals("jaccard")) {
+			startTime = System.nanoTime();
 			if(vectorSpaceModel.equals("v1.0")){
 				System.out.println("======================================= jaccard v1.0");
 				for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {	
@@ -1432,108 +1460,12 @@ public class GraphIndex {
 					if(nilai <= tMagnitude) result.put(ee.getKey(), nilai);
 				}
 			}
+			stopTime = System.nanoTime();
 		}
 		
 		StartPage.result = result;
+		StartPage.elapsedTime = stopTime - startTime;
 		QueryResults.showQueryResults(namaGraph,distanceFunction); 
-		
-		/* System.out.println("print similarity Euclidean Distance v1_0");
-		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
-			
-			ArrayList<Integer> graphInput = new ArrayList<>();
-			for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
-				graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
-			}
-			
-			ArrayList<Integer> graphTarget = new ArrayList<>();
-			for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
-				graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
-			}
-			
-			
-			
-			ArrayList<Integer> graphTemp =  new ArrayList<>();
-			for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
-				graphTemp.add(tempVValue.get(ee.getKey()).get(i));
-			} 
-			System.out.println(ee.getKey()+" "+euclideanDistance(graphInput,graphTarget,graphTemp));
-			
-			//result.put(ee.getKey(),eqluideanDistanceV11(graphInput,graphTarget,graphTemp));
-		}
-		
-		System.out.println("print similarity Euclidean Distance v1_1");
-		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
-			
-			ArrayList<Integer> graphInput = new ArrayList<>();
-			for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
-				graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
-			}
-			
-			ArrayList<Integer> graphTarget = new ArrayList<>();
-			for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
-				graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
-			}
-			
-			
-			
-			ArrayList<Integer> graphTemp =  new ArrayList<>();
-			for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
-				graphTemp.add(tempVValue.get(ee.getKey()).get(i));
-			} 
-			System.out.println(ee.getKey()+" "+euclideanDistanceV11(graphInput,graphTarget,graphTemp));
-			
-			//result.put(ee.getKey(),eqluideanDistanceV11(graphInput,graphTarget,graphTemp));
-		} 
-		
-		ArrayList<Double> data = new ArrayList<>();
-		System.out.println("print similarity Euclidean Distance v2_0");
-		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
-			ArrayList<Integer> graphInput = null;
-			graphInput = new ArrayList<>();
-			for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
-				graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
-			}
-			ArrayList<Integer> graphTarget = null;
-			graphTarget = new ArrayList<>();
-			for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
-				graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
-			}
-			ArrayList<Integer> graphTemp = null;
-			graphTemp =  new ArrayList<>();
-			for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
-				graphTemp.add(tempVValue.get(ee.getKey()).get(i));
-			}
-			Double nilai = euclideanDistanceV20(graphInput,graphTarget,graphTemp);
-			//System.out.println(ee.getKey()+" "+nilai);
-			///Double nilai = euclideanDistanceV20(graphInput,graphTarget,graphTemp);
-			//data.add(0.77777777777777777777777777777);
-			//System.out.println("nilai "+nilai);
-			result.put(ee.getKey(),nilai);
-		}
-		StartPage.result = result;
-		QueryResults.showQueryResults(namaGraph,distanceFunction);
-		
-		/*System.out.println("print similarity Euclidean Distance v2_1");
-		for (Entry<String, ArrayList<Integer>> ee : tempVValue.entrySet()) {
-			ArrayList<Integer> graphInput = null;
-			graphInput = new ArrayList<>();
-			for(int i = 0; i < StartPage.gIndexDesc.getgDesc().get(namaGraph).size(); i++) {
-				graphInput.add(StartPage.gIndexDesc.getgDesc().get(namaGraph).get(i));
-			}
-			ArrayList<Integer> graphTarget = null;
-			graphTarget = new ArrayList<>();
-			for(int i =0; i < StartPage.gIndexDesc.getgDesc().get(ee.getKey()).size(); i++) {
-				graphTarget.add(StartPage.gIndexDesc.getgDesc().get(ee.getKey()).get(i));
-			}
-			ArrayList<Integer> graphTemp = null;
-			graphTemp =  new ArrayList<>();
-			for(int i = 0; i < tempVValue.get(ee.getKey()).size(); i++) {
-				graphTemp.add(tempVValue.get(ee.getKey()).get(i));
-			}
-			
-			System.out.println(ee.getKey()+" "+euclideanDistanceV21(graphInput,graphTarget,graphTemp));
-			//result.put(ee.getKey(),euclideanDistanceV21(graphInput,graphTarget,graphTemp));
-		} */
 	
 	}
 	
@@ -1627,7 +1559,9 @@ public class GraphIndex {
 			score = score + (Math.abs(input[i] - target[i]) *Math.abs(input[i] - target[i]));
 		}
 		
-		
+		System.out.println("ukuran vektor "+input.length);
+		printArray(input);
+		printArray(target);
 		Double MinValue = 0.0;
 		int tempMaxValue = 0;
 		for(int i = 0; i < input.length; i++) {
@@ -1635,8 +1569,9 @@ public class GraphIndex {
 		}
 		
 		Double MaxValue = Math.sqrt(tempMaxValue);
-		
-		Double finalScore = normalize(score,MaxValue,MinValue);
+		System.out.println("nilai score "+score);
+		System.out.println("nilai MaxValue "+MaxValue);
+		Double finalScore = normalize((double) Math.sqrt(score),MaxValue,MinValue);
 		//System.out.println("final Score "+finalScore);
 		return finalScore;
 	}
@@ -3501,7 +3436,7 @@ public class GraphIndex {
 					target[i] = null;
 				}
 				for(int i = graphTemp.size(); i < input.length; i++) {
-					input = null;
+					input[i] = null;
 				}
 			}
 			
@@ -3528,16 +3463,26 @@ public class GraphIndex {
 			for(int i = 1; i < input.length; i++) {
 				pembilang = pembilang + input[i]*target[i];
 			}
+			
+			System.out.println("pembilang "+pembilang);
+			
 			double p1 = (double) input[0]*input[0];
 			for(int i = 1; i < input.length; i++) {
 				p1 = p1 + input[i]*input[i];
 			}
+			
+			System.out.println("penyebut p1 "+p1);
 			double p2 = (double) target[0]*target[0];
 			for(int i = 1; i < input.length; i++) {
 				p2 = p2 + target[i]*target[i];
 			}
+			
+			System.out.println("penyebut p2 "+p2);
 			Double tempValue = (double) pembilang/(Math.sqrt(p1)*Math.sqrt(p2));
-			score = 1.0 - tempValue;
+			
+			System.out.println("tempValue "+tempValue);
+			
+			score = 1.0000000000000002 - tempValue;
 			return score;
 		}
 	//21. kumar hassebrook
@@ -3724,23 +3669,28 @@ public class GraphIndex {
 				pembilang = pembilang + ((input[i] - target[i])*(input[i] - target[i]));
 			}
 			
+			System.out.println("pembilang "+pembilang);
 			
 			double p1 = (double) (input[0] * input[0]);
 			
 			for(int i =1; i < input.length; i++) {
-				p1 = p1 + (input[i]*target[i]);
+				p1 = p1 + (input[i]*input[i]);
 			}
+			
+			System.out.println("p1 "+p1);
 			
 			double p2 = (double) target[0] * target[0];
 			for(int i = 1; i < input.length; i++) {
 				p2 = p2 + (target[i] * target[i]);
 			}
+			System.out.println("p2 "+p2);
 			
 			double p3 = (double) input[0] * target[0];
 			for(int i = 1; i < input.length; i++) {
 				p3 = p3 + (input[i] * target[i]);
 			}
 			
+			System.out.println("p3 "+p3);
 			
 			Double tempValue = (double) (pembilang/(p1 + p2 - p3));
 			score = tempValue;
@@ -5660,7 +5610,7 @@ public class GraphIndex {
 		}
 		
 		Double tempValue = (double) pembilang/(Math.sqrt(p1)* Math.sqrt(p2));
-		score = 1 - tempValue;
+		score = 1.0000000000000002 - tempValue;
 		return score;
 	}
 	
@@ -7757,7 +7707,7 @@ public class GraphIndex {
 				int temp = targetV2_0[i];
 				targetV2_0[i] = StartPage.gpi.getKeyIndex().get(temp).getKeyGraphValue().size();
 			}else {
-				inputV2_0[i] = 0;
+				targetV2_0[i] = 0;
 			}
 		}
 		printArray(inputV2_0);
@@ -7960,7 +7910,7 @@ public class GraphIndex {
 			p3 = p3 + (targetV2_0[i]* targetV2_0[i]);
 		}
 		Double tempValue = (double) p1/(Math.sqrt(p2) * Math.sqrt(p3));
-		score = 1 - tempValue;
+		score = 1.0000000000000002 - tempValue;
 		return score;
 	}
 	
@@ -10155,7 +10105,7 @@ public class GraphIndex {
 		}
 		
 		Double tempValue = (double) p1/(Math.sqrt(p2) * Math.sqrt(p3));
-		score = 1 - tempValue;
+		score = 1.0000000000000002 - tempValue;
 		return score;
 	}
 	
